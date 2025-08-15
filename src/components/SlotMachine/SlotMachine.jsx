@@ -3,7 +3,7 @@ import SlotReel from './SlotReel'
 import { generateSecurePassword, generateRandomCharacters } from '../../utils/passwordGenerator'
 import styles from './SlotMachine.module.css'
 
-const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerated }) => {
+const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerated, onLengthChange, onGenerate }) => {
   const [reelStates, setReelStates] = useState([])
   const [animationPhase, setAnimationPhase] = useState('idle') // 'idle', 'spinning', 'stopping', 'stopped'
   const [stoppingIndex, setStoppingIndex] = useState(-1) // 当前正在停止的轮盘索引
@@ -192,6 +192,45 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
             animationPhase === 'stopped' ? styles.stopped :
             styles.idle
           }`}></div>
+        </div>
+        <div className={styles.generateButton}>
+          <button
+            onClick={onGenerate}
+            disabled={animationPhase === 'spinning' || animationPhase === 'stopping'}
+            className={`${styles.button} ${animationPhase === 'spinning' || animationPhase === 'stopping' ? styles.generating : ''}`}
+          >
+            <span className={styles.buttonIcon}>
+              {animationPhase === 'spinning' || animationPhase === 'stopping' ? '⏳' : '🎲'}
+            </span>
+            <span className={styles.buttonText}>
+              {animationPhase === 'spinning' || animationPhase === 'stopping' ? '生成中...' : '生成密码'}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.lengthControl}>
+        <label htmlFor="passwordLength" className={styles.lengthLabel}>
+          密码长度
+          <span className={styles.lengthValue}>{passwordLength}</span>
+        </label>
+        
+        <div className={styles.lengthSlider}>
+          <input
+            id="passwordLength"
+            type="range"
+            min="4"
+            max="20"
+            value={passwordLength}
+            onChange={(e) => onLengthChange && onLengthChange(parseInt(e.target.value, 10))}
+            className={styles.slider}
+            disabled={animationPhase === 'spinning' || animationPhase === 'stopping'}
+          />
+          <div className={styles.sliderLabels}>
+            <span className={styles.sliderLabel}>4</span>
+            <span className={styles.sliderLabel}>12</span>
+            <span className={styles.sliderLabel}>20</span>
+          </div>
         </div>
       </div>
 

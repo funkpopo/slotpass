@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import SlotMachine from './components/SlotMachine/SlotMachine'
-import PasswordControls from './components/PasswordControls/PasswordControls'
 import PasswordDisplay from './components/PasswordDisplay/PasswordDisplay'
 import './App.css'
 
@@ -34,17 +33,12 @@ function App() {
 
       <main className="app-main">
         <div className="app-container">
-          <PasswordControls
-            passwordLength={passwordLength}
-            onLengthChange={handleLengthChange}
-            onGenerate={handleGeneratePassword}
-            isGenerating={isGenerating}
-          />
-
           <SlotMachine
             passwordLength={passwordLength}
             isSpinning={isGenerating}
             onPasswordGenerated={handlePasswordGenerated}
+            onLengthChange={handleLengthChange}
+            onGenerate={handleGeneratePassword}
           />
 
           <PasswordDisplay
