@@ -1,0 +1,315 @@
+.slotMachine {
+  background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+  border-radius: var(--border-radius-lg);
+  border: 3px solid var(--border-color);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 2px 8px rgba(255, 255, 255, 0.1);
+  padding: var(--spacing-lg);
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.slotMachine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, 
+    var(--accent-secondary), 
+    var(--accent-primary), 
+    var(--accent-secondary));
+  opacity: 0.8;
+}
+
+.machineHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid var(--border-color);
+  position: relative;
+}
+
+.machineLogo {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.machineTitle {
+  font-size: var(--font-size-xl);
+  font-weight: bold;
+  color: var(--text-primary);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 1px;
+}
+
+.statusLight {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.light {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all var(--transition-normal);
+}
+
+.light.idle {
+  background: var(--text-muted);
+  box-shadow: 0 0 8px rgba(153, 153, 153, 0.3);
+}
+
+.light.spinning {
+  background: var(--accent-secondary);
+  box-shadow: 
+    0 0 16px rgba(255, 107, 53, 0.6),
+    0 0 32px rgba(255, 107, 53, 0.3);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.light.stopping {
+  background: #ffeb3b;
+  box-shadow: 
+    0 0 16px rgba(255, 235, 59, 0.6),
+    0 0 32px rgba(255, 235, 59, 0.3);
+}
+
+.light.stopped {
+  background: var(--accent-primary);
+  box-shadow: 
+    0 0 16px rgba(76, 175, 80, 0.6),
+    0 0 32px rgba(76, 175, 80, 0.3);
+}
+
+.reelsContainer {
+  position: relative;
+  margin: var(--spacing-lg) 0;
+}
+
+.reelsFrame {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-lg);
+  background: 
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0.2) 0%, transparent 70%),
+    linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--border-color);
+  box-shadow: 
+    inset 0 4px 16px rgba(0, 0, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.reelsFrame::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    var(--accent-secondary) 20%, 
+    var(--accent-secondary) 80%, 
+    transparent);
+  transform: translateY(-50%);
+  opacity: 0.6;
+}
+
+.machineLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.topLine,
+.bottomLine {
+  position: absolute;
+  left: var(--spacing-md);
+  right: var(--spacing-md);
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent);
+}
+
+.topLine {
+  top: var(--spacing-md);
+}
+
+.bottomLine {
+  bottom: var(--spacing-md);
+}
+
+.machineFooter {
+  text-align: center;
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-color);
+}
+
+.statusText {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+  min-height: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progressBar {
+  width: 100%;
+  height: 4px;
+  background: var(--bg-primary);
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.progress {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, 
+    var(--accent-primary), 
+    var(--accent-secondary));
+  border-radius: 2px;
+  transition: width var(--transition-normal);
+}
+
+.progress.spinning {
+  width: 70%;
+  animation: progressPulse 1s ease-in-out infinite;
+}
+
+.progress.stopping {
+  width: 90%;
+  background: linear-gradient(90deg, 
+    var(--accent-secondary), 
+    #ffeb3b);
+}
+
+.progress.stopped {
+  width: 100%;
+  background: var(--accent-primary);
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+}
+
+.progress.idle {
+  width: 0;
+}
+
+/* 动画关键帧 */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+@keyframes progressPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .slotMachine {
+    padding: var(--spacing-md);
+    margin: 0 var(--spacing-sm);
+  }
+  
+  .machineHeader {
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .machineLogo {
+    font-size: 2rem;
+  }
+  
+  .machineTitle {
+    font-size: var(--font-size-lg);
+  }
+  
+  .reelsFrame {
+    gap: var(--spacing-xs);
+    padding: var(--spacing-md);
+  }
+  
+  .statusLight {
+    position: static;
+    transform: none;
+  }
+  
+  .machineHeader {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .reelsFrame {
+    gap: 2px;
+    padding: var(--spacing-sm);
+  }
+  
+  .machineTitle {
+    font-size: var(--font-size-base);
+  }
+  
+  .statusText {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* 高对比度模式适配 */
+@media (prefers-contrast: high) {
+  .slotMachine {
+    border-width: 4px;
+    border-color: var(--text-primary);
+  }
+  
+  .reelsFrame {
+    border-width: 3px;
+    border-color: var(--text-primary);
+  }
+  
+  .light {
+    border-width: 3px;
+    border-color: var(--text-primary);
+  }
+}
+
+/* 减少动画模式 */
+@media (prefers-reduced-motion: reduce) {
+  .light.spinning {
+    animation: none;
+  }
+  
+  .progress.spinning {
+    animation: none;
+  }
+  
+  .light, .progress {
+    transition: none;
+  }
+}
