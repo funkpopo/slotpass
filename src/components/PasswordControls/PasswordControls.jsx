@@ -9,7 +9,7 @@ const PasswordControls = ({
 }) => {
   const handleLengthChange = (event) => {
     const newLength = parseInt(event.target.value, 10)
-    if (newLength >= 4 && newLength <= 20) {
+    if (newLength >= 3 && newLength <= 20) {
       onLengthChange(newLength)
     }
   }
@@ -38,7 +38,7 @@ const PasswordControls = ({
             <input
               id="passwordLength"
               type="range"
-              min="4"
+              min="3"
               max="20"
               value={passwordLength}
               onChange={handleLengthChange}
@@ -46,7 +46,7 @@ const PasswordControls = ({
               disabled={isGenerating}
             />
             <div className={styles.sliderLabels}>
-              <span className={styles.sliderLabel}>4</span>
+              <span className={styles.sliderLabel}>3</span>
               <span className={styles.sliderLabel}>12</span>
               <span className={styles.sliderLabel}>20</span>
             </div>

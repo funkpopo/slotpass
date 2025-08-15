@@ -54,20 +54,135 @@
   color: var(--text-muted);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .app-main {
-    padding: var(--spacing-md) var(--spacing-sm);
+    padding: var(--spacing-lg) var(--spacing-md);
   }
   
   .app-container {
     gap: var(--spacing-lg);
   }
   
+  .app-header {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+  
+  .app-container {
+    gap: var(--spacing-md);
+  }
+  
+  .app-header {
+    padding: var(--spacing-sm) var(--spacing-xs);
+  }
+  
   .app-title {
     font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-xs);
   }
   
   .app-subtitle {
     font-size: var(--font-size-base);
+  }
+  
+  .app-footer {
+    padding: var(--spacing-sm);
+  }
+  
+  .app-footer p {
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    min-height: 100vh;
+    min-height: 100dvh; /* 动态视口高度 */
+  }
+  
+  .app-main {
+    padding: var(--spacing-sm) 0;
+  }
+  
+  .app-container {
+    gap: var(--spacing-sm);
+  }
+  
+  .app-header {
+    padding: var(--spacing-sm) var(--spacing-xs);
+  }
+  
+  .app-title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .app-footer {
+    padding: var(--spacing-xs);
+  }
+}
+
+@media (max-width: 360px) {
+  .app-title {
+    font-size: var(--font-size-base);
+  }
+  
+  .app-subtitle {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* 横屏模式优化 */
+@media (max-width: 768px) and (orientation: landscape) {
+  .app {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  
+  .app-header {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .app-main {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .app-footer {
+    padding: var(--spacing-xs);
+  }
+  
+  .app-title {
+    font-size: var(--font-size-base);
+    margin-bottom: 0;
+  }
+  
+  .app-container {
+    gap: var(--spacing-xs);
+  }
+}
+
+/* 安全区域适配（刘海屏等） */
+@supports (padding: max(0px)) {
+  .app-header {
+    padding-left: max(var(--spacing-sm), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-sm), env(safe-area-inset-right));
+    padding-top: max(var(--spacing-lg), env(safe-area-inset-top));
+  }
+  
+  .app-footer {
+    padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+    padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+  }
+  
+  @media (max-width: 768px) {
+    .app-main {
+      padding-left: max(var(--spacing-sm), env(safe-area-inset-left));
+      padding-right: max(var(--spacing-sm), env(safe-area-inset-right));
+    }
   }
 }

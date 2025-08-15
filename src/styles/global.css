@@ -95,11 +95,28 @@ button {
   padding: var(--spacing-xs) var(--spacing-sm);
   font-size: var(--font-size-base);
   transition: all var(--transition-fast);
+  
+  /* 移动端触摸优化 */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 button:disabled {
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+/* 移动端触摸优化 */
+@media (hover: none) and (pointer: coarse) {
+  button:hover {
+    transform: none; /* 移除桌面端悬停效果 */
+  }
+  
+  button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
 }
 
 /* 输入框基础样式 */
@@ -120,16 +137,61 @@ input:focus, select:focus {
 }
 
 /* 响应式设计 */
+@media (max-width: 1024px) {
+  :root {
+    --spacing-xs: 0.4rem;
+    --spacing-sm: 0.8rem;
+    --spacing-md: 1.2rem;
+    --spacing-lg: 1.6rem;
+    --spacing-xl: 2.4rem;
+  }
+}
+
 @media (max-width: 768px) {
   html {
     font-size: 14px;
   }
   
   :root {
+    --spacing-xs: 0.3rem;
+    --spacing-sm: 0.6rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.4rem;
+    --spacing-xl: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 13px;
+  }
+  
+  :root {
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
-    --spacing-md: 1rem;
-    --spacing-lg: 1.5rem;
-    --spacing-xl: 2rem;
+    --spacing-md: 0.8rem;
+    --spacing-lg: 1.2rem;
+    --spacing-xl: 1.6rem;
+    
+    /* 增加移动端字体大小 */
+    --font-size-sm: 0.9rem;
+    --font-size-base: 1.1rem;
+    --font-size-lg: 1.3rem;
+    --font-size-xl: 1.6rem;
+    --font-size-2xl: 2rem;
+  }
+}
+
+@media (max-width: 360px) {
+  html {
+    font-size: 12px;
+  }
+  
+  :root {
+    --spacing-xs: 0.2rem;
+    --spacing-sm: 0.4rem;
+    --spacing-md: 0.6rem;
+    --spacing-lg: 1rem;
+    --spacing-xl: 1.4rem;
   }
 }

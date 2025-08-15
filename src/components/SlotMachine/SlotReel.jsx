@@ -46,6 +46,7 @@ const SlotReel = memo(({
   return (
     <div 
       className={styles.slotReel}
+      data-long-password={passwordLength > 12 ? "true" : "false"}
       style={{
         '--password-length': passwordLength
       }}

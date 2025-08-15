@@ -266,7 +266,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
           <input
             id="passwordLength"
             type="range"
-            min="4"
+            min="3"
             max="20"
             value={passwordLength}
             onChange={(e) => onLengthChange && onLengthChange(parseInt(e.target.value, 10))}
@@ -274,7 +274,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
             disabled={animationPhase === 'spinning' || animationPhase === 'stopping'}
           />
           <div className={styles.sliderLabels}>
-            <span className={styles.sliderLabel}>4</span>
+            <span className={styles.sliderLabel}>3</span>
             <span className={styles.sliderLabel}>12</span>
             <span className={styles.sliderLabel}>20</span>
           </div>
@@ -283,7 +283,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
 
       <div className={styles.reelsContainer}>
         <div 
-          className={styles.reelsFrame}
+          className={`${styles.reelsFrame} ${passwordLength > 12 ? styles.longPassword : ''}`}
           style={{
             '--password-length': passwordLength
           }}
