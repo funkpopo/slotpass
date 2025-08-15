@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import SlotMachine from './components/SlotMachine/SlotMachine'
-import PasswordDisplay from './components/PasswordDisplay/PasswordDisplay'
 import './App.css'
 
 function App() {
@@ -39,10 +38,6 @@ function App() {
             onPasswordGenerated={handlePasswordGenerated}
             onLengthChange={handleLengthChange}
             onGenerate={handleGeneratePassword}
-          />
-
-          <PasswordDisplay
-            password={generatedPassword}
           />
         </div>
       </main>

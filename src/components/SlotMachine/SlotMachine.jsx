@@ -7,6 +7,9 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
   const [reelStates, setReelStates] = useState([])
   const [animationPhase, setAnimationPhase] = useState('idle') // 'idle', 'spinning', 'stopping', 'stopped'
   const [stoppingIndex, setStoppingIndex] = useState(-1) // 当前正在停止的轮盘索引
+  const [generatedPassword, setGeneratedPassword] = useState('') // 生成的密码
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false) // 密码可见性
+  const [copyStatus, setCopyStatus] = useState('idle') // 'idle', 'copied', 'error'
 
   // 初始化轮盘状态
   useEffect(() => {
@@ -67,6 +70,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
         // 所有轮盘都已停止
         setTimeout(() => {
           setAnimationPhase('stopped')
+          setGeneratedPassword(finalPassword)
           if (onPasswordGenerated) {
             onPasswordGenerated(finalPassword)
           }
@@ -175,6 +179,49 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
     }
   }, [isSpinning, animationPhase, startSpinning])
 
+  // 密码显示相关函数
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible)
+  }
+
+  const copyPasswordToClipboard = useCallback(async () => {
+    if (!generatedPassword) return
+
+    try {
+      await navigator.clipboard.writeText(generatedPassword)
+      setCopyStatus('copied')
+      setTimeout(() => setCopyStatus('idle'), 2000)
+    } catch (err) {
+      setCopyStatus('error')
+      setTimeout(() => setCopyStatus('idle'), 2000)
+    }
+  }, [generatedPassword])
+
+  const getPasswordStrengthInfo = (password) => {
+    if (!password) return { level: 0, text: '暂无密码', color: 'var(--text-muted)' }
+    
+    const length = password.length
+    const hasUpper = /[A-Z]/.test(password)
+    const hasLower = /[a-z]/.test(password)
+    const hasNumber = /\d/.test(password)
+    const hasSymbol = /[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)
+    
+    const typesCount = [hasUpper, hasLower, hasNumber, hasSymbol].filter(Boolean).length
+    
+    if (length >= 12 && typesCount >= 4) {
+      return { level: 4, text: '极强', color: 'var(--accent-primary)' }
+    } else if (length >= 8 && typesCount >= 3) {
+      return { level: 3, text: '强', color: '#8bc34a' }
+    } else if (length >= 6 && typesCount >= 2) {
+      return { level: 2, text: '中等', color: '#ffeb3b' }
+    } else {
+      return { level: 1, text: '弱', color: 'var(--accent-danger)' }
+    }
+  }
+
+  const strengthInfo = getPasswordStrengthInfo(generatedPassword)
+  const displayPassword = generatedPassword ? (isPasswordVisible ? generatedPassword : '•'.repeat(generatedPassword.length)) : ''
+
   return (
     <div 
       className={styles.slotMachine}
@@ -277,6 +324,68 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
           <div className={`${styles.progress} ${styles[animationPhase]}`}></div>
         </div>
       </div>
+
+      {/* 密码显示区域 */}
+      {generatedPassword && (
+        <div className={styles.passwordDisplay}>
+          <div className={styles.passwordField}>
+            <div className={styles.passwordText}>
+              {displayPassword}
+            </div>
+            
+            <div className={styles.strengthIndicator}>
+              <span className={styles.strengthLabel}>强度:</span>
+              <div className={styles.strengthMeter}>
+                <div 
+                  className={styles.strengthFill}
+                  style={{ 
+                    width: `${(strengthInfo.level / 4) * 100}%`,
+                    backgroundColor: strengthInfo.color
+                  }}
+                />
+              </div>
+              <span 
+                className={styles.strengthText}
+                style={{ color: strengthInfo.color }}
+              >
+                {strengthInfo.text}
+              </span>
+            </div>
+            
+            <div className={styles.passwordActions}>
+              <button
+                onClick={togglePasswordVisibility}
+                className={styles.actionButton}
+                title={isPasswordVisible ? '隐藏密码' : '显示密码'}
+              >
+                {isPasswordVisible ? '👁️' : '🙈'}
+              </button>
+              
+              <button
+                onClick={copyPasswordToClipboard}
+                className={`${styles.actionButton} ${styles.copyButton} ${styles[copyStatus]}`}
+                title="复制密码"
+                disabled={copyStatus !== 'idle'}
+              >
+                {copyStatus === 'copied' ? '✅' :
+                 copyStatus === 'error' ? '❌' : '📋'}
+              </button>
+            </div>
+          </div>
+          
+          {copyStatus === 'copied' && (
+            <div className={styles.copyFeedback}>
+              密码已复制到剪贴板！
+            </div>
+          )}
+          
+          {copyStatus === 'error' && (
+            <div className={styles.copyError}>
+              复制失败，请手动选择密码
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
