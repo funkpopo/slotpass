@@ -1,6 +1,6 @@
 .slotReel {
   position: relative;
-  width: 80px;
+  width: calc(min(95px, max(45px, (100vw - 8rem) / var(--password-length, 8))));
   height: 120px;
   background: linear-gradient(145deg, var(--bg-tertiary), var(--bg-secondary));
   border-radius: var(--border-radius-lg);
@@ -12,10 +12,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 1;
 }
 
 .reelWindow {
-  width: 60px;
+  width: calc(min(75px, max(30px, (100vw - 10rem) / var(--password-length, 8))));
   height: 80px;
   background: var(--bg-primary);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -356,12 +357,12 @@
 /* 响应式设计 */
 @media (max-width: 768px) {
   .slotReel {
-    width: 60px;
+    width: calc(min(70px, max(35px, (100vw - 6rem) / var(--password-length, 8))));
     height: 100px;
   }
   
   .reelWindow {
-    width: 45px;
+    width: calc(min(55px, max(25px, (100vw - 8rem) / var(--password-length, 8))));
     height: 65px;
   }
   

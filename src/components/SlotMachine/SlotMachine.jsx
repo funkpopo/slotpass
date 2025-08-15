@@ -176,7 +176,12 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
   }, [isSpinning, animationPhase, startSpinning])
 
   return (
-    <div className={styles.slotMachine}>
+    <div 
+      className={styles.slotMachine}
+      style={{
+        '--password-length': passwordLength
+      }}
+    >
       <div className={styles.machineHeader}>
         <div className={styles.machineLogo}>🎰</div>
         <div className={styles.machineTitle}>密码轮盘</div>
@@ -191,7 +196,12 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
       </div>
 
       <div className={styles.reelsContainer}>
-        <div className={styles.reelsFrame}>
+        <div 
+          className={styles.reelsFrame}
+          style={{
+            '--password-length': passwordLength
+          }}
+        >
           {reelStates.map((reel, index) => (
             <SlotReel
               key={reel.id}
@@ -204,6 +214,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
               isStopped={reel.isStopped}
               animationDelay={reel.animationDelay}
               reelIndex={index}
+              passwordLength={passwordLength}
             />
           ))}
         </div>

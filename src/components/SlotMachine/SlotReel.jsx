@@ -10,7 +10,8 @@ const SlotReel = memo(({
   isStopping = false,
   isStopped = false,
   animationDelay = 0,
-  reelIndex = 0 
+  reelIndex = 0,
+  passwordLength = 8
 }) => {
   // 创建显示字符列表，确保始终有内容
   const getDisplayContent = () => {
@@ -43,7 +44,12 @@ const SlotReel = memo(({
   const displayContent = getDisplayContent()
   
   return (
-    <div className={styles.slotReel}>
+    <div 
+      className={styles.slotReel}
+      style={{
+        '--password-length': passwordLength
+      }}
+    >
       <div className={styles.reelWindow}>
         <div 
           className={`${
