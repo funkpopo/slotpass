@@ -6,23 +6,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: slotpass-app
-    networks:
-      - slotpass-network
-    restart: unless-stopped
-    
-  nginx:
-    image: nginx:alpine
-    container_name: slotpass-nginx
     ports:
       - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - slotpass-app
-    networks:
-      - slotpass-network
     restart: unless-stopped
-
-networks:
-  slotpass-network:
-    driver: bridge
