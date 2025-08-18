@@ -18,26 +18,41 @@ const SlotReel = memo(({
     if (isStopped) {
       // 已停止，显示最终字符，确保不为空
       const finalChar = finalCharacter || currentCharacter || (displayCharacters.length > 0 ? displayCharacters[0] : 'A')
-      return [finalChar]
+      // 在最终字符前后添加一些字符，让轮盘看起来更真实
+      return ['·', '·', finalChar, '·', '·']
     } else if (isStopping) {
-      // 停止中，显示减速过程
+      // 停止中，显示减速过程，包含目标字符和周围字符
       const targetChar = finalCharacter || currentCharacter || (displayCharacters.length > 0 ? displayCharacters[0] : 'A')
-      // 在减速过程中，逐渐减少显示的字符数量，最后聚焦到目标字符
-      const baseChars = displayCharacters.length > 0 ? displayCharacters.slice(0, 5) : ['A', 'B', 'C', 'D', 'E']
-      return [...baseChars, targetChar, targetChar] // 重复目标字符增加停止概率
+      const baseChars = displayCharacters.length > 0 ? displayCharacters.slice(0, 12) : 
+        ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+      return [...baseChars, targetChar, targetChar, '·', '·'] // 逐渐聚焦到目标字符
     } else if (isSpinning) {
-      // 旋转中，显示连续的字符流
+      // 旋转中，显示大量连续的字符流，确保窗口中始终有多个可见字符
       const spinChars = displayCharacters.length > 0 ? displayCharacters : characters
       if (spinChars.length === 0) {
-        // 如果没有字符，生成默认的字符序列
-        return Array.from({length: 20}, (_, i) => String.fromCharCode(65 + (i % 26)))
+        // 生成包含各种字符类型的序列
+        const chars = []
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+        const numbers = '0123456789'
+        const symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?'
+        const allChars = letters + numbers + symbols
+        
+        for (let i = 0; i < 80; i++) {
+          chars.push(allChars[i % allChars.length])
+        }
+        return chars
       }
-      return spinChars.slice(0, Math.min(30, spinChars.length))
+      // 扩展字符列表，创建足够长的无缝滚动内容
+      const extendedChars = []
+      for (let i = 0; i < 100; i++) {
+        extendedChars.push(spinChars[i % spinChars.length])
+      }
+      return extendedChars
     } else {
-      // 闲置状态，确保有内容显示
+      // 闲置状态，显示当前字符和周围的装饰字符
       const idleChar = currentCharacter || finalCharacter || 
                       (displayCharacters.length > 0 ? displayCharacters[0] : 'A')
-      return [idleChar]
+      return ['·', idleChar, '·']
     }
   }
   

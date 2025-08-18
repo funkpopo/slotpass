@@ -57,7 +57,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
     setTimeout(() => {
       setAnimationPhase('stopping')
       startStoppingSequence(finalPassword)
-    }, 2000) // 2秒后开始逐个停止
+    }, 500) // 缩短到500ms后开始逐个停止
 
   }, [passwordLength, animationPhase])
 
@@ -90,7 +90,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
           
           // 不要重置状态为idle，保持stopped状态以显示密码
           // 只有在开始新的生成时才重置
-        }, 500)
+        }, 200) // 缩短最终延迟到200ms
         return
       }
       
@@ -165,8 +165,8 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
         )
         
         currentIndex++
-        setTimeout(stopNextReel, 200) // 缩短间隔到200ms，让停止效果更连贯
-      }, 600) // 每个轮盘减速600ms
+        setTimeout(stopNextReel, 150) // 缩短间隔到150ms，让停止效果更连贯
+      }, 400) // 每个轮盘减速400ms，与CSS动画协调
     }
     
     stopNextReel()
