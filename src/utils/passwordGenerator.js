@@ -14,9 +14,40 @@ export const ALL_CHARACTERS =
   CHARACTER_SETS.SYMBOLS
 
 /**
+ * 创建受保护的密码对象，防止控制台访问
+ */
+class SecurePassword {
+  constructor(value) {
+    this._value = value
+    
+    // 防止控制台检查
+    Object.defineProperty(this, '_value', {
+      enumerable: false,
+      configurable: false
+    })
+    
+    // 添加混淆属性
+    this.toString = () => '[Protected Password]'
+    this.valueOf = () => '[Protected Password]'
+    this[Symbol.toPrimitive] = () => '[Protected Password]'
+    
+    // 冻结对象防止修改
+    Object.freeze(this)
+  }
+  
+  getValue() {
+    return this._value
+  }
+  
+  clear() {
+    this._value = null
+  }
+}
+
+/**
  * 生成加密安全的随机密码
  * @param {number} length - 密码长度
- * @returns {string} 生成的密码
+ * @returns {SecurePassword} 受保护的密码对象
  */
 export function generateSecurePassword(length) {
   if (length < 3) {
@@ -33,7 +64,10 @@ export function generateSecurePassword(length) {
     password += ALL_CHARACTERS[randomIndex]
   }
   
-  return password
+  // 清除原始数组
+  array.fill(0)
+  
+  return new SecurePassword(password)
 }
 
 /**

@@ -9,7 +9,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
   const [reelStates, setReelStates] = useState([])
   const [animationPhase, setAnimationPhase] = useState('idle') // 'idle', 'spinning', 'stopping', 'stopped'
   const [stoppingIndex, setStoppingIndex] = useState(-1) // 当前正在停止的轮盘索引
-  const [generatedPassword, setGeneratedPassword] = useState('') // 生成的密码
+  const [securePassword, setSecurePassword] = useState(null) // 受保护的密码对象
   const [isPasswordVisible, setIsPasswordVisible] = useState(false) // 密码可见性
   const [copyStatus, setCopyStatus] = useState('idle') // 'idle', 'copied', 'error'
 
@@ -38,7 +38,8 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
     setStoppingIndex(-1)
     
     // 生成最终密码
-    const finalPassword = generateSecurePassword(passwordLength)
+    const securePasswordObj = generateSecurePassword(passwordLength)
+    const finalPassword = securePasswordObj.getValue()
     
     // 更新轮盘状态开始旋转
     setReelStates(prevReels => 
@@ -72,7 +73,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
         // 所有轮盘都已停止
         setTimeout(() => {
           setAnimationPhase('stopped')
-          setGeneratedPassword(finalPassword)
+          setSecurePassword(securePasswordObj)
           if (onPasswordGenerated) {
             onPasswordGenerated(finalPassword)
           }
@@ -187,17 +188,17 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
   }
 
   const copyPasswordToClipboard = useCallback(async () => {
-    if (!generatedPassword) return
+    if (!securePassword) return
 
     try {
-      await navigator.clipboard.writeText(generatedPassword)
+      await navigator.clipboard.writeText(securePassword.getValue())
       setCopyStatus('copied')
       setTimeout(() => setCopyStatus('idle'), 2000)
     } catch (err) {
       setCopyStatus('error')
       setTimeout(() => setCopyStatus('idle'), 2000)
     }
-  }, [generatedPassword])
+  }, [securePassword])
 
   const getPasswordStrengthInfo = (password) => {
     if (!password) return { level: 0, text: t('slotMachine.strengthLevels.none'), color: 'var(--text-muted)' }
@@ -221,8 +222,9 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
     }
   }
 
-  const strengthInfo = getPasswordStrengthInfo(generatedPassword)
-  const displayPassword = generatedPassword ? (isPasswordVisible ? generatedPassword : '•'.repeat(generatedPassword.length)) : ''
+  const actualPassword = securePassword ? securePassword.getValue() : ''
+  const strengthInfo = getPasswordStrengthInfo(actualPassword)
+  const displayPassword = actualPassword ? (isPasswordVisible ? actualPassword : '•'.repeat(actualPassword.length)) : ''
 
   return (
     <div 
@@ -328,7 +330,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
       </div>
 
       {/* 密码显示区域 */}
-      {generatedPassword && (
+      {securePassword && (
         <div className={styles.passwordDisplay}>
           <div className={styles.passwordField}>
             <div className={styles.passwordText}>

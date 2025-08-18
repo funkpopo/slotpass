@@ -1,30 +1,46 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import SlotMachine from './components/SlotMachine/SlotMachine'
 import PWAInstall from './components/PWAInstall/PWAInstall'
 import LanguageSwitcher from './components/LanguageSwitcher/LanguageSwitcher'
+import { clearPasswordMemory } from './utils/consoleProtection'
 import './App.css'
 
 function App() {
   const { t } = useTranslation()
   const [passwordLength, setPasswordLength] = useState(8)
-  const [generatedPassword, setGeneratedPassword] = useState('')
+  const [securePassword, setSecurePassword] = useState(null)
   const [isGenerating, setIsGenerating] = useState(false)
+
+  // 定期清理密码内存痕迹
+  useEffect(() => {
+    const interval = setInterval(() => {
+      clearPasswordMemory()
+    }, 30000) // 每30秒清理一次
+
+    return () => clearInterval(interval)
+  }, [])
 
   const handleGeneratePassword = () => {
     setIsGenerating(true)
-    setGeneratedPassword('')
+    // 清理之前的密码
+    if (securePassword) {
+      securePassword.clear()
+    }
+    setSecurePassword(null)
   }
 
   const handlePasswordGenerated = (password) => {
-    setGeneratedPassword(password)
+    // 这里password是明文，但只用于传递，不存储
     setIsGenerating(false)
+    // 实际的安全密码对象在SlotMachine组件中管理
   }
 
   const handleLengthChange = (newLength) => {
     setPasswordLength(newLength)
-    if (generatedPassword && !isGenerating) {
-      setGeneratedPassword('')
+    if (securePassword && !isGenerating) {
+      securePassword.clear()
+      setSecurePassword(null)
     }
   }
 
