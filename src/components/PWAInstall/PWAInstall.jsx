@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './PWAInstall.module.css';
 
 const PWAInstall = () => {
+  const { t } = useTranslation();
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
 
@@ -54,12 +56,12 @@ const PWAInstall = () => {
       <div className={styles.content}>
         <span className={styles.icon}>📱</span>
         <div className={styles.text}>
-          <strong>安装应用</strong>
-          <p>将SlotPass添加到主屏幕，随时快速生成密码</p>
+          <strong>{t('pwa.install')}</strong>
+          <p>{t('pwa.installPrompt')}</p>
         </div>
         <div className={styles.actions}>
           <button onClick={handleInstallClick} className={styles.installButton}>
-            安装
+            {t('pwa.install')}
           </button>
           <button onClick={handleDismiss} className={styles.dismissButton}>
             ×

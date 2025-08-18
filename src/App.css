@@ -6,7 +6,9 @@
 }
 
 .app-header {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: var(--spacing-lg) var(--spacing-sm);
   background: var(--bg-secondary);
   box-shadow: var(--shadow-light);

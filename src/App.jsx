@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import SlotMachine from './components/SlotMachine/SlotMachine'
 import PWAInstall from './components/PWAInstall/PWAInstall'
+import LanguageSwitcher from './components/LanguageSwitcher/LanguageSwitcher'
 import './App.css'
 
 function App() {
+  const { t } = useTranslation()
   const [passwordLength, setPasswordLength] = useState(8)
   const [generatedPassword, setGeneratedPassword] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
@@ -28,7 +31,8 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1 className="app-title">🎰 SlotPass</h1>
+        <h1 className="app-title">🎰 {t('title')}</h1>
+        <LanguageSwitcher />
       </header>
 
       <main className="app-main">
@@ -44,7 +48,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>安全随机密码生成 · 永不重复</p>
+        <p>{t('footer')}</p>
       </footer>
 
       <PWAInstall />

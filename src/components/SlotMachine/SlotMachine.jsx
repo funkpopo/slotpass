@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import SlotReel from './SlotReel'
 import { generateSecurePassword, generateRandomCharacters } from '../../utils/passwordGenerator'
 import styles from './SlotMachine.module.css'
 
 const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerated, onLengthChange, onGenerate }) => {
+  const { t } = useTranslation()
   const [reelStates, setReelStates] = useState([])
   const [animationPhase, setAnimationPhase] = useState('idle') // 'idle', 'spinning', 'stopping', 'stopped'
   const [stoppingIndex, setStoppingIndex] = useState(-1) // 当前正在停止的轮盘索引
@@ -198,7 +200,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
   }, [generatedPassword])
 
   const getPasswordStrengthInfo = (password) => {
-    if (!password) return { level: 0, text: '暂无密码', color: 'var(--text-muted)' }
+    if (!password) return { level: 0, text: t('slotMachine.strengthLevels.none'), color: 'var(--text-muted)' }
     
     const length = password.length
     const hasUpper = /[A-Z]/.test(password)
@@ -209,13 +211,13 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
     const typesCount = [hasUpper, hasLower, hasNumber, hasSymbol].filter(Boolean).length
     
     if (length >= 12 && typesCount >= 4) {
-      return { level: 4, text: '极强', color: 'var(--accent-primary)' }
+      return { level: 4, text: t('slotMachine.strengthLevels.strong'), color: 'var(--accent-primary)' }
     } else if (length >= 8 && typesCount >= 3) {
-      return { level: 3, text: '强', color: '#8bc34a' }
+      return { level: 3, text: t('slotMachine.strengthLevels.good'), color: '#8bc34a' }
     } else if (length >= 6 && typesCount >= 2) {
-      return { level: 2, text: '中等', color: '#ffeb3b' }
+      return { level: 2, text: t('slotMachine.strengthLevels.fair'), color: '#ffeb3b' }
     } else {
-      return { level: 1, text: '弱', color: 'var(--accent-danger)' }
+      return { level: 1, text: t('slotMachine.strengthLevels.weak'), color: 'var(--accent-danger)' }
     }
   }
 
@@ -231,7 +233,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
     >
       <div className={styles.machineHeader}>
         <div className={styles.machineLogo}>🎰</div>
-        <div className={styles.machineTitle}>密码轮盘</div>
+        <div className={styles.machineTitle}>{t('slotMachine.title')}</div>
         <div className={styles.statusLight}>
           <div className={`${styles.light} ${
             animationPhase === 'spinning' ? styles.spinning :
@@ -250,7 +252,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
               {animationPhase === 'spinning' || animationPhase === 'stopping' ? '⏳' : '🎲'}
             </span>
             <span className={styles.buttonText}>
-              {animationPhase === 'spinning' || animationPhase === 'stopping' ? '生成中...' : '生成密码'}
+              {animationPhase === 'spinning' || animationPhase === 'stopping' ? t('slotMachine.generating') : t('slotMachine.generateButton')}
             </span>
           </button>
         </div>
@@ -258,7 +260,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
 
       <div className={styles.lengthControl}>
         <label htmlFor="passwordLength" className={styles.lengthLabel}>
-          密码长度
+          {t('slotMachine.lengthLabel')}
           <span className={styles.lengthValue}>{passwordLength}</span>
         </label>
         
@@ -314,10 +316,10 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
 
       <div className={styles.machineFooter}>
         <div className={styles.statusText}>
-          {animationPhase === 'spinning' && '正在生成密码...'}
-          {animationPhase === 'stopping' && `正在确定第 ${stoppingIndex + 1} 位密码...`}
-          {animationPhase === 'stopped' && '密码生成完成！查看轮盘中的密码'}
-          {animationPhase === 'idle' && '准备就绪'}
+          {animationPhase === 'spinning' && t('slotMachine.status.generating')}
+          {animationPhase === 'stopping' && t('slotMachine.status.stopping', { index: stoppingIndex + 1 })}
+          {animationPhase === 'stopped' && t('slotMachine.status.completed')}
+          {animationPhase === 'idle' && t('slotMachine.status.ready')}
         </div>
         
         <div className={styles.progressBar}>
@@ -334,7 +336,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
             </div>
             
             <div className={styles.strengthIndicator}>
-              <span className={styles.strengthLabel}>强度:</span>
+              <span className={styles.strengthLabel}>{t('slotMachine.password.strength')}</span>
               <div className={styles.strengthMeter}>
                 <div 
                   className={styles.strengthFill}
@@ -356,7 +358,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
               <button
                 onClick={togglePasswordVisibility}
                 className={styles.actionButton}
-                title={isPasswordVisible ? '隐藏密码' : '显示密码'}
+                title={isPasswordVisible ? t('slotMachine.password.hide') : t('slotMachine.password.show')}
               >
                 {isPasswordVisible ? '👁️' : '🙈'}
               </button>
@@ -364,7 +366,7 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
               <button
                 onClick={copyPasswordToClipboard}
                 className={`${styles.actionButton} ${styles.copyButton} ${styles[copyStatus]}`}
-                title="复制密码"
+                title={t('slotMachine.password.copy')}
                 disabled={copyStatus !== 'idle'}
               >
                 {copyStatus === 'copied' ? '✅' :
@@ -375,13 +377,13 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
           
           {copyStatus === 'copied' && (
             <div className={styles.copyFeedback}>
-              密码已复制到剪贴板！
+              {t('slotMachine.password.copied')}
             </div>
           )}
           
           {copyStatus === 'error' && (
             <div className={styles.copyError}>
-              复制失败，请手动选择密码
+              {t('slotMachine.password.copyError')}
             </div>
           )}
         </div>
