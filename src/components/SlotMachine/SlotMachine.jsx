@@ -29,43 +29,8 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
     setReelStates(initialReels)
   }, [passwordLength])
 
-  // 生成密码并启动动画
-  const startSpinning = useCallback(() => {
-    if (animationPhase === 'spinning' || animationPhase === 'stopping') return
-
-    // 重置所有状态，开始新的生成
-    setAnimationPhase('spinning')
-    setStoppingIndex(-1)
-    
-    // 生成最终密码
-    const securePasswordObj = generateSecurePassword(passwordLength)
-    const finalPassword = securePasswordObj.getValue()
-    
-    // 更新轮盘状态开始旋转
-    setReelStates(prevReels => 
-      prevReels.map((reel, index) => ({
-        ...reel,
-        characters: generateRandomCharacters(80), // 更多字符用于流畅旋转动画
-        displayCharacters: generateRandomCharacters(40), // 保持显示字符的丰富性
-        finalCharacter: finalPassword[index],
-        isSpinning: true,
-        isStopping: false,
-        isStopped: false,
-        animationDelay: index * 80 + Math.random() * 120, // 递增延迟 + 随机延迟
-        currentCharacter: generateRandomCharacters(1)[0] // 开始时的字符
-      }))
-    )
-
-    // 开始逐个停止轮盘的流程
-    setTimeout(() => {
-      setAnimationPhase('stopping')
-      startStoppingSequence(finalPassword)
-    }, 500) // 缩短到500ms后开始逐个停止
-
-  }, [passwordLength, animationPhase])
-
   // 逐个停止轮盘的序列
-  const startStoppingSequence = useCallback((finalPassword) => {
+  const startStoppingSequence = useCallback((finalPassword, securePasswordObj) => {
     let currentIndex = 0
     
     const stopNextReel = () => {
@@ -178,9 +143,39 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
   // 监听外部旋转触发
   useEffect(() => {
     if (isSpinning && (animationPhase === 'idle' || animationPhase === 'stopped')) {
-      startSpinning()
+      // 直接在这里执行生成逻辑，避免循环依赖
+      if (animationPhase === 'spinning' || animationPhase === 'stopping') return
+
+      // 重置所有状态，开始新的生成
+      setAnimationPhase('spinning')
+      setStoppingIndex(-1)
+      
+      // 生成最终密码
+      const securePasswordObj = generateSecurePassword(passwordLength)
+      const finalPassword = securePasswordObj.getValue()
+      
+      // 更新轮盘状态开始旋转
+      setReelStates(prevReels => 
+        prevReels.map((reel, index) => ({
+          ...reel,
+          characters: generateRandomCharacters(80),
+          displayCharacters: generateRandomCharacters(40),
+          finalCharacter: finalPassword[index],
+          isSpinning: true,
+          isStopping: false,
+          isStopped: false,
+          animationDelay: index * 80 + Math.random() * 120,
+          currentCharacter: generateRandomCharacters(1)[0]
+        }))
+      )
+
+      // 开始逐个停止轮盘的流程
+      setTimeout(() => {
+        setAnimationPhase('stopping')
+        startStoppingSequence(finalPassword, securePasswordObj)
+      }, 500)
     }
-  }, [isSpinning, animationPhase, startSpinning])
+  }, [isSpinning, animationPhase, passwordLength, startStoppingSequence])
 
   // 密码显示相关函数
   const togglePasswordVisibility = () => {
