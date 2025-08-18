@@ -10,9 +10,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['crypto']
   },
-  define: {
-    global: 'globalThis',
-  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
