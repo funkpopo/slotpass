@@ -1,0 +1,39 @@
+{
+  "name": "SlotPass - 老虎机密码生成器",
+  "short_name": "SlotPass",
+  "description": "老虎机风格的密码生成器",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#4CAF50",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/slot-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["utilities", "productivity"],
+  "shortcuts": [
+    {
+      "name": "生成密码",
+      "short_name": "生成",
+      "description": "快速生成新密码",
+      "url": "/"
+    }
+  ]
+}

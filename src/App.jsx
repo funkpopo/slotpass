@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import SlotMachine from './components/SlotMachine/SlotMachine'
+import PWAInstall from './components/PWAInstall/PWAInstall'
 import './App.css'
 
 function App() {
@@ -45,6 +46,8 @@ function App() {
       <footer className="app-footer">
         <p>安全随机密码生成 · 永不重复</p>
       </footer>
+
+      <PWAInstall />
     </div>
   )
 }

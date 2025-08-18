@@ -1,0 +1,137 @@
+.installPrompt {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+}
+
+.icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+.text strong {
+  display: block;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.text p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.installButton {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.installButton:hover {
+  background: #45a049;
+}
+
+.dismissButton {
+  background: transparent;
+  border: none;
+  color: #999;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.dismissButton:hover {
+  color: #666;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .installPrompt {
+    background: rgba(34, 34, 34, 0.95);
+  }
+
+  .text strong {
+    color: #fff;
+  }
+
+  .text p {
+    color: #ccc;
+  }
+
+  .dismissButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .installPrompt {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+  }
+
+  .content {
+    padding: 12px;
+  }
+
+  .text strong {
+    font-size: 14px;
+  }
+
+  .text p {
+    font-size: 12px;
+  }
+
+  .installButton {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
