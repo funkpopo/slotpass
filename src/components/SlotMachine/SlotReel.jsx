@@ -18,8 +18,8 @@ const SlotReel = memo(({
     if (isStopped) {
       // 已停止，显示最终字符，确保不为空
       const finalChar = finalCharacter || currentCharacter || (displayCharacters.length > 0 ? displayCharacters[0] : 'A')
-      // 在最终字符前后添加一些字符，让轮盘看起来更真实
-      return ['·', '·', finalChar, '·', '·']
+      // 确保最终字符显示在视窗中央 - 移动端优化
+      return [finalChar]
     } else if (isStopping) {
       // 停止中，显示减速过程，包含目标字符和周围字符
       const targetChar = finalCharacter || currentCharacter || (displayCharacters.length > 0 ? displayCharacters[0] : 'A')
@@ -68,15 +68,16 @@ const SlotReel = memo(({
     >
       <div className={styles.reelWindow}>
         <div 
-          className={`${
-            isSpinning ? `${styles.reelStrip} ${styles.spinning}` :
-            isStopping ? `${styles.reelStrip} ${styles.stopping}` :
-            isStopped ? `${styles.reelStrip} ${styles.stopped}` :
-            styles.reelStrip
+          className={`${styles.reelStrip} ${
+            isSpinning ? styles.spinning :
+            isStopping ? styles.stopping :
+            isStopped ? styles.stopped :
+            ''
           }`}
           style={{
             '--animation-delay': `${animationDelay}ms`,
-            '--reel-index': reelIndex
+            '--reel-index': reelIndex,
+            '--final-transform': isStopped ? 'translateY(0)' : 'unset'
           }}
         >
           {displayContent.map((char, index) => (

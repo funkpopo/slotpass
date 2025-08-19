@@ -137,6 +137,8 @@
   animation-fill-mode: both;
   filter: none; /* 移除模糊，确保清晰显示 */
   position: relative;
+  /* 移动端优化：确保最终字符居中显示 */
+  transform: var(--final-transform, translateY(-160px));
 }
 
 .stopped .reelCharacter {
@@ -336,7 +338,7 @@
     opacity: 1;
   }
   100% { 
-    transform: translateY(-160px) scale(1) rotateX(0deg) rotateZ(0deg);
+    transform: var(--final-transform, translateY(-160px)) scale(1) rotateX(0deg) rotateZ(0deg);
     opacity: 1;
   }
 }
@@ -634,6 +636,17 @@
     height: 55px;
     font-size: var(--font-size-sm);
   }
+  
+  /* 移动端停止状态优化 */
+  .stopped {
+    transform: var(--final-transform, translateY(0)) !important;
+  }
+  
+  .stopped .reelCharacter {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 
 @media (max-width: 480px) {
@@ -677,6 +690,17 @@
     height: 40px;
     font-size: var(--font-size-xs);
   }
+  
+  /* 移动端停止状态优化 */
+  .stopped {
+    transform: var(--final-transform, translateY(0)) !important;
+  }
+  
+  .stopped .reelCharacter {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 
 @media (max-width: 360px) {
@@ -713,6 +737,17 @@
   .slotReel[data-long-password="true"] .reelCharacter {
     height: 32px;
     font-size: 0.7rem;
+  }
+  
+  /* 移动端停止状态优化 */
+  .stopped {
+    transform: var(--final-transform, translateY(0)) !important;
+  }
+  
+  .stopped .reelCharacter {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 
