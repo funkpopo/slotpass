@@ -1,5 +1,5 @@
 .slotMachine {
-  background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+  background: var(--bg-secondary);
   border-radius: var(--border-radius-lg);
   border: 3px solid var(--border-color);
   box-shadow: 
@@ -20,10 +20,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, 
-    var(--accent-secondary), 
-    var(--accent-primary), 
-    var(--accent-secondary));
+  background: var(--accent-secondary);
   opacity: 0.8;
 }
 
@@ -34,7 +31,6 @@
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-md);
   padding-bottom: var(--spacing-md);
-  border-bottom: 2px solid var(--border-color);
   position: relative;
   padding-right: var(--spacing-xl);
 }
@@ -47,7 +43,7 @@
 }
 
 .button {
-  background: linear-gradient(135deg, var(--accent-secondary), #ff8a50);
+  background: var(--accent-secondary);
   color: var(--text-primary);
   border: none;
   border-radius: var(--border-radius-md);
@@ -80,7 +76,7 @@
 }
 
 .button.generating {
-  background: linear-gradient(135deg, #ffeb3b, #ffc107);
+  background: #ffeb3b;
   animation: buttonPulse 1s ease-in-out infinite;
 }
 
@@ -144,7 +140,7 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent-primary), #66bb6a);
+  background: var(--accent-primary);
   border: 1px solid var(--text-primary);
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(76, 175, 80, 0.4);
@@ -159,7 +155,7 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent-primary), #66bb6a);
+  background: var(--accent-primary);
   border: 1px solid var(--text-primary);
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(76, 175, 80, 0.4);
@@ -253,9 +249,7 @@
   justify-content: center;
   align-items: center;
   padding: var(--spacing-xs);
-  background: 
-    radial-gradient(ellipse at center, rgba(0, 0, 0, 0.2) 0%, transparent 70%),
-    linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+  background: var(--bg-primary);
   border-radius: var(--border-radius-md);
   border: 2px solid var(--border-color);
   box-shadow: 
@@ -283,11 +277,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, 
-    transparent, 
-    var(--accent-secondary) 20%, 
-    var(--accent-secondary) 80%, 
-    transparent);
+  background: var(--accent-secondary);
   transform: translateY(-50%);
   opacity: 0.6;
 }
@@ -307,10 +297,7 @@
   left: var(--spacing-md);
   right: var(--spacing-md);
   height: 1px;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.2) 50%, 
-    transparent);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .topLine {
@@ -325,7 +312,6 @@
   text-align: center;
   margin-top: var(--spacing-lg);
   padding-top: var(--spacing-md);
-  border-top: 1px solid var(--border-color);
 }
 
 .statusText {
@@ -351,9 +337,7 @@
 .progress {
   height: 100%;
   width: 0;
-  background: linear-gradient(90deg, 
-    var(--accent-primary), 
-    var(--accent-secondary));
+  background: var(--accent-primary);
   border-radius: 2px;
   transition: width var(--transition-normal);
 }
@@ -365,9 +349,7 @@
 
 .progress.stopping {
   width: 90%;
-  background: linear-gradient(90deg, 
-    var(--accent-secondary), 
-    #ffeb3b);
+  background: var(--accent-secondary);
 }
 
 .progress.stopped {
@@ -646,7 +628,7 @@
 .passwordDisplay {
   margin-top: var(--spacing-sm);
   padding: var(--spacing-sm);
-  background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+  background: var(--bg-secondary);
   border-radius: var(--border-radius-md);
   border: 2px solid var(--border-color);
   box-shadow: 
@@ -828,7 +810,6 @@
 .passwordStats {
   margin-top: var(--spacing-sm);
   padding-top: var(--spacing-sm);
-  border-top: 1px solid var(--border-color);
   display: flex;
   gap: var(--spacing-lg);
   flex-wrap: wrap;

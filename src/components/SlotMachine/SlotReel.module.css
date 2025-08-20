@@ -2,7 +2,7 @@
   position: relative;
   width: calc(min(95px, max(50px, (100vw - 8rem) / var(--password-length, 8) - 0.5rem)));
   height: 120px;
-  background: linear-gradient(145deg, var(--bg-tertiary), var(--bg-secondary));
+  background: var(--bg-tertiary);
   border-radius: var(--border-radius-lg);
   border: 2px solid var(--border-color);
   box-shadow: 
@@ -155,11 +155,7 @@
   right: -2px;
   bottom: -2px;
   border-radius: var(--border-radius-lg);
-  background: linear-gradient(45deg, 
-    var(--accent-secondary), 
-    transparent 30%, 
-    transparent 70%, 
-    var(--accent-secondary));
+  background: var(--accent-secondary);
   opacity: 0;
   transition: opacity var(--transition-normal);
   pointer-events: none;
@@ -360,11 +356,7 @@
 
 @keyframes borderGlow {
   0%, 100% {
-    background: linear-gradient(45deg, 
-      var(--accent-secondary), 
-      transparent 30%, 
-      transparent 70%, 
-      var(--accent-secondary));
+    background: var(--accent-secondary);
     opacity: 1;
   }
   50% {
@@ -379,11 +371,7 @@
 
 @keyframes borderSlowGlow {
   0% {
-    background: linear-gradient(45deg, 
-      var(--accent-secondary), 
-      transparent 30%, 
-      transparent 70%, 
-      var(--accent-secondary));
+    background: var(--accent-secondary);
     opacity: 0.9;
   }
   50% {
@@ -408,11 +396,7 @@
   0% { 
     opacity: 0.9;
     transform: scale(1) rotate(0deg);
-    background: linear-gradient(45deg, 
-      var(--accent-secondary), 
-      transparent 30%, 
-      transparent 70%, 
-      var(--accent-secondary));
+    background: var(--accent-secondary);
   }
   25% {
     opacity: 1.1;

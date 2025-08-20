@@ -2,7 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, var(--bg-primary) 0%, #2d2d30 100%);
+  background: var(--bg-primary);
 }
 
 .app-header {
@@ -48,7 +48,6 @@
   text-align: center;
   padding: var(--spacing-md);
   background: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
 }
 
 .app-footer p {
