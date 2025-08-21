@@ -7,9 +7,6 @@ export default defineConfig({
     port: 3000,
     open: true
   },
-  optimizeDeps: {
-    exclude: ['crypto']
-  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
