@@ -3,7 +3,30 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "description": "slot password generator",
+  "description": "SlotPass - 老虎机风格的密码生成器，提供安全、有趣的密码生成体验",
+  "keywords": [
+    "password-generator",
+    "slot-machine",
+    "security",
+    "password-tool",
+    "密码生成器",
+    "老虎机",
+    "安全工具",
+    "PWA"
+  ],
+  "homepage": "https://funk.qzz.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/slotpass.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/slotpass/issues"
+  },
+  "author": {
+    "name": "SlotPass Team",
+    "url": "https://funk.qzz.io"
+  },
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://funk.qzz.io/sitemap.xml
+
+# Block search engines from indexing specific files
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Allow important files for SEO
+Allow: /manifest.json
+Allow: /slot-icon.svg
+Allow: /icon-*.png
+
+# Crawl-delay (optional, in seconds)
+Crawl-delay: 1

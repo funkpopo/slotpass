@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import SlotMachine from './components/SlotMachine/SlotMachine'
 import PWAInstall from './components/PWAInstall/PWAInstall'
 import LanguageSwitcher from './components/LanguageSwitcher/LanguageSwitcher'
+import SEOHead from './components/SEOHead/SEOHead'
 import { clearPasswordMemory } from './utils/consoleProtection'
 import './App.css'
 
@@ -46,6 +47,7 @@ function App() {
 
   return (
     <div className="app">
+      <SEOHead />
       <header className="app-header">
         <h1 className="app-title">🎰 {t('title')}</h1>
         <LanguageSwitcher />
