@@ -14,7 +14,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2.0'      # 提高CPU限制
+          cpus: '1.0'      # 提高CPU限制
           memory: 1G       # 提高内存限制
         reservations:
           cpus: '1.0'
