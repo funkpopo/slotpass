@@ -9,3 +9,45 @@ services:
     ports:
       - "80:80"
     restart: unless-stopped
+    
+    # 高并发资源优化
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'      # 提高CPU限制
+          memory: 1G       # 提高内存限制
+        reservations:
+          cpus: '1.0'
+          memory: 512M
+    
+    # 高并发环境变量
+    environment:
+      - NGINX_WORKER_PROCESSES=auto
+      - NGINX_WORKER_CONNECTIONS=8192    # 提高连接数
+      - NODE_ENV=production
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 15s      # 更频繁的健康检查
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    
+    # 优化日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"    # 增大日志文件
+        max-file: "5"      # 保留更多日志文件
+    
+    # 性能优化的系统配置
+    ulimits:
+      nofile:
+        soft: 65536      # 增加文件描述符限制
+        hard: 65536
+      nproc: 65536       # 增加进程限制
+    
+    # 安全配置
+    security_opt:
+      - no-new-privileges:true
