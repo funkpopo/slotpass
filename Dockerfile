@@ -10,8 +10,8 @@ RUN apk add --no-cache python3 make g++
 # 复制package文件
 COPY package*.json ./
 
-# 安装依赖 (使用npm ci提升性能)
-RUN npm ci --only=production && npm cache clean --force
+# 安装依赖 (包含devDependencies用于构建)
+RUN npm ci && npm cache clean --force
 
 # 复制源代码
 COPY . .
