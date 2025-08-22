@@ -568,23 +568,53 @@
   .controlsRow {
     flex-direction: column;
     gap: var(--spacing-sm);
+    align-items: center;
+    width: 100%;
   }
   
   .lengthControl {
     max-width: 100%;
     min-width: auto;
     margin: 0;
+    width: 100%;
   }
   
   .optionsControl {
     max-width: 100%;
     min-width: auto;
     margin: 0;
+    width: 100%;
   }
   
   .optionsGrid {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-xs);
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+  }
+  
+  /* 移动设备上增大开关尺寸 */
+  .optionItem {
+    padding: var(--spacing-xs);
+    gap: var(--spacing-sm);
+  }
+  
+  .optionSlider {
+    width: 32px;
+    height: 18px;
+  }
+  
+  .optionSlider::before {
+    height: 14px;
+    width: 14px;
+    left: 1px;
+    top: 1px;
+  }
+  
+  .optionCheckbox:checked + .optionSlider::before {
+    transform: translateX(14px);
+  }
+  
+  .optionText {
+    font-size: var(--font-size-sm);
   }
   
   .lengthSlider {
@@ -641,6 +671,50 @@
     border-radius: 0;
     border-left: none;
     border-right: none;
+  }
+  
+  .controlsRow {
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .lengthControl,
+  .optionsControl {
+    padding: var(--spacing-xs);
+  }
+  
+  .optionsGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+  }
+  
+  /* 小屏幕设备上进一步增大开关 */
+  .optionItem {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+    min-height: 44px; /* 满足苹果44px最小触控区域建议 */
+    align-items: center;
+  }
+  
+  .optionSlider {
+    width: 36px;
+    height: 20px;
+  }
+  
+  .optionSlider::before {
+    height: 16px;
+    width: 16px;
+    left: 1px;
+    top: 1px;
+  }
+  
+  .optionCheckbox:checked + .optionSlider::before {
+    transform: translateX(16px);
+  }
+  
+  .optionText {
+    font-size: var(--font-size-base);
+    font-weight: 600;
   }
   
   .reelsFrame {
