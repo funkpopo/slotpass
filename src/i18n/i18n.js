@@ -110,14 +110,31 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'zh',
+    fallbackLng: 'en',
+    supportedLngs: ['en', 'zh'],
+    load: 'languageOnly',
     debug: false,
     interpolation: {
       escapeValue: false
     },
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
-      caches: ['localStorage']
+      order: ['localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
+      caches: ['localStorage'],
+      lookupLocalStorage: 'i18nextLng',
+      lookupFromPathIndex: 0,
+      lookupFromSubdomainIndex: 0,
+      excludeCacheFor: ['cimode'],
+      convertDetectedLanguage: (lng) => {
+        // Convert language codes to supported languages
+        if (lng.startsWith('zh')) {
+          return 'zh'
+        }
+        if (lng.startsWith('en')) {
+          return 'en'
+        }
+        // Default fallback
+        return 'en'
+      }
     }
   })
 
