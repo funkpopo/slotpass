@@ -47,11 +47,36 @@ class SecurePassword {
 /**
  * 生成加密安全的随机密码
  * @param {number} length - 密码长度
+ * @param {Object} options - 密码选项
+ * @param {boolean} options.includeUppercase - 包含大写字母
+ * @param {boolean} options.includeLowercase - 包含小写字母
+ * @param {boolean} options.includeNumbers - 包含数字
+ * @param {boolean} options.includeSymbols - 包含特殊符号
  * @returns {SecurePassword} 受保护的密码对象
  */
-export function generateSecurePassword(length) {
+export function generateSecurePassword(length, options = {}) {
   if (length < 3) {
     throw new Error('密码长度不能少于3位')
+  }
+
+  // 默认选项
+  const {
+    includeUppercase = true,
+    includeLowercase = true,
+    includeNumbers = true,
+    includeSymbols = true
+  } = options
+
+  // 构建字符集
+  let characterSet = ''
+  if (includeUppercase) characterSet += CHARACTER_SETS.UPPERCASE
+  if (includeLowercase) characterSet += CHARACTER_SETS.LOWERCASE
+  if (includeNumbers) characterSet += CHARACTER_SETS.NUMBERS
+  if (includeSymbols) characterSet += CHARACTER_SETS.SYMBOLS
+
+  // 如果没有选择任何字符集，抛出错误
+  if (characterSet === '') {
+    throw new Error('至少需要选择一种字符类型')
   }
 
   // 使用crypto.getRandomValues生成真随机数
@@ -60,8 +85,8 @@ export function generateSecurePassword(length) {
   
   let password = ''
   for (let i = 0; i < length; i++) {
-    const randomIndex = array[i] % ALL_CHARACTERS.length
-    password += ALL_CHARACTERS[randomIndex]
+    const randomIndex = array[i] % characterSet.length
+    password += characterSet[randomIndex]
   }
   
   // 清除原始数组
@@ -72,24 +97,46 @@ export function generateSecurePassword(length) {
 
 /**
  * 生成单个随机字符
+ * @param {Object} options - 字符选项
  * @returns {string} 随机字符
  */
-export function generateRandomCharacter() {
+export function generateRandomCharacter(options = {}) {
+  // 默认选项
+  const {
+    includeUppercase = true,
+    includeLowercase = true,
+    includeNumbers = true,
+    includeSymbols = true
+  } = options
+
+  // 构建字符集
+  let characterSet = ''
+  if (includeUppercase) characterSet += CHARACTER_SETS.UPPERCASE
+  if (includeLowercase) characterSet += CHARACTER_SETS.LOWERCASE
+  if (includeNumbers) characterSet += CHARACTER_SETS.NUMBERS
+  if (includeSymbols) characterSet += CHARACTER_SETS.SYMBOLS
+
+  // 如果没有选择任何字符集，使用默认全字符集
+  if (characterSet === '') {
+    characterSet = ALL_CHARACTERS
+  }
+
   const array = new Uint32Array(1)
   crypto.getRandomValues(array)
-  const randomIndex = array[0] % ALL_CHARACTERS.length
-  return ALL_CHARACTERS[randomIndex]
+  const randomIndex = array[0] % characterSet.length
+  return characterSet[randomIndex]
 }
 
 /**
  * 生成随机字符序列（用于轮盘动画）
  * @param {number} count - 字符数量
+ * @param {Object} options - 字符选项
  * @returns {string[]} 字符数组
  */
-export function generateRandomCharacters(count) {
+export function generateRandomCharacters(count, options = {}) {
   const characters = []
   for (let i = 0; i < count; i++) {
-    characters.push(generateRandomCharacter())
+    characters.push(generateRandomCharacter(options))
   }
   return characters
 }

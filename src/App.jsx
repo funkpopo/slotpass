@@ -12,6 +12,12 @@ function App() {
   const [passwordLength, setPasswordLength] = useState(8)
   const [securePassword, setSecurePassword] = useState(null)
   const [isGenerating, setIsGenerating] = useState(false)
+  const [passwordOptions, setPasswordOptions] = useState({
+    includeUppercase: true,
+    includeLowercase: true,
+    includeNumbers: true,
+    includeSymbols: true
+  })
 
   // 定期清理密码内存痕迹
   useEffect(() => {
@@ -61,6 +67,8 @@ function App() {
             onPasswordGenerated={handlePasswordGenerated}
             onLengthChange={handleLengthChange}
             onGenerate={handleGeneratePassword}
+            passwordOptions={passwordOptions}
+            onOptionsChange={setPasswordOptions}
           />
         </div>
       </main>

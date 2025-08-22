@@ -4,7 +4,20 @@ import SlotReel from './SlotReel'
 import { generateSecurePassword, generateRandomCharacters } from '../../utils/passwordGenerator'
 import styles from './SlotMachine.module.css'
 
-const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerated, onLengthChange, onGenerate }) => {
+const SlotMachine = ({ 
+  passwordLength = 8, 
+  isSpinning = false, 
+  onPasswordGenerated, 
+  onLengthChange, 
+  onGenerate,
+  passwordOptions = {
+    includeUppercase: true,
+    includeLowercase: true,
+    includeNumbers: true,
+    includeSymbols: true
+  },
+  onOptionsChange
+}) => {
   const { t } = useTranslation()
   const [reelStates, setReelStates] = useState([])
   const [animationPhase, setAnimationPhase] = useState('idle') // 'idle', 'spinning', 'stopping', 'stopped'
@@ -17,17 +30,17 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
   useEffect(() => {
     const initialReels = Array.from({ length: passwordLength }, (_, index) => ({
       id: `reel-${index}`,
-      characters: generateRandomCharacters(40), // 更多初始字符用于流畅动画
+      characters: generateRandomCharacters(40, passwordOptions), // 更多初始字符用于流畅动画
       finalCharacter: '',
       animationDelay: Math.random() * 300, // 0-300ms随机延迟
       isSpinning: false,
       isStopping: false,
       isStopped: false,
-      currentCharacter: generateRandomCharacters(1)[0], // 当前显示的字符，确保不为空
-      displayCharacters: generateRandomCharacters(20) // 始终保持显示的字符列表
+      currentCharacter: generateRandomCharacters(1, passwordOptions)[0], // 当前显示的字符，确保不为空
+      displayCharacters: generateRandomCharacters(20, passwordOptions) // 始终保持显示的字符列表
     }))
     setReelStates(initialReels)
-  }, [passwordLength])
+  }, [passwordLength, passwordOptions])
 
   // 逐个停止轮盘的序列
   const startStoppingSequence = useCallback((finalPassword, securePasswordObj) => {
@@ -151,15 +164,15 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
       setStoppingIndex(-1)
       
       // 生成最终密码
-      const securePasswordObj = generateSecurePassword(passwordLength)
+      const securePasswordObj = generateSecurePassword(passwordLength, passwordOptions)
       const finalPassword = securePasswordObj.getValue()
       
       // 更新轮盘状态开始旋转
       setReelStates(prevReels => 
         prevReels.map((reel, index) => ({
           ...reel,
-          characters: generateRandomCharacters(80),
-          displayCharacters: generateRandomCharacters(40),
+          characters: generateRandomCharacters(80, passwordOptions),
+          displayCharacters: generateRandomCharacters(40, passwordOptions),
           finalCharacter: finalPassword[index],
           isSpinning: true,
           isStopping: false,
@@ -242,7 +255,11 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
         <div className={styles.generateButton}>
           <button
             onClick={onGenerate}
-            disabled={animationPhase === 'spinning' || animationPhase === 'stopping'}
+            disabled={
+              animationPhase === 'spinning' || 
+              animationPhase === 'stopping' ||
+              !(passwordOptions.includeUppercase || passwordOptions.includeLowercase || passwordOptions.includeNumbers || passwordOptions.includeSymbols)
+            }
             className={`${styles.button} ${animationPhase === 'spinning' || animationPhase === 'stopping' ? styles.generating : ''}`}
           >
             <span className={styles.buttonIcon}>
@@ -255,27 +272,82 @@ const SlotMachine = ({ passwordLength = 8, isSpinning = false, onPasswordGenerat
         </div>
       </div>
 
-      <div className={styles.lengthControl}>
-        <label htmlFor="passwordLength" className={styles.lengthLabel}>
-          {t('slotMachine.lengthLabel')}
-          <span className={styles.lengthValue}>{passwordLength}</span>
-        </label>
-        
-        <div className={styles.lengthSlider}>
-          <input
-            id="passwordLength"
-            type="range"
-            min="3"
-            max="20"
-            value={passwordLength}
-            onChange={(e) => onLengthChange && onLengthChange(parseInt(e.target.value, 10))}
-            className={styles.slider}
-            disabled={animationPhase === 'spinning' || animationPhase === 'stopping'}
-          />
-          <div className={styles.sliderLabels}>
-            <span className={styles.sliderLabel}>3</span>
-            <span className={styles.sliderLabel}>12</span>
-            <span className={styles.sliderLabel}>20</span>
+      <div className={styles.controlsRow}>
+        <div className={styles.lengthControl}>
+          <label htmlFor="passwordLength" className={styles.lengthLabel}>
+            {t('slotMachine.lengthLabel')}
+            <span className={styles.lengthValue}>{passwordLength}</span>
+          </label>
+          
+          <div className={styles.lengthSlider}>
+            <input
+              id="passwordLength"
+              type="range"
+              min="3"
+              max="20"
+              value={passwordLength}
+              onChange={(e) => onLengthChange && onLengthChange(parseInt(e.target.value, 10))}
+              className={styles.slider}
+              disabled={animationPhase === 'spinning' || animationPhase === 'stopping'}
+            />
+            <div className={styles.sliderLabels}>
+              <span className={styles.sliderLabel}>3</span>
+              <span className={styles.sliderLabel}>12</span>
+              <span className={styles.sliderLabel}>20</span>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.optionsControl}>
+          <div className={styles.optionsTitle}>{t('slotMachine.options.title')}</div>
+          <div className={styles.optionsGrid}>
+            <label className={styles.optionItem}>
+              <input
+                type="checkbox"
+                checked={passwordOptions.includeUppercase}
+                onChange={(e) => onOptionsChange && onOptionsChange({ ...passwordOptions, includeUppercase: e.target.checked })}
+                className={styles.optionCheckbox}
+                disabled={animationPhase === 'spinning' || animationPhase === 'stopping'}
+              />
+              <span className={styles.optionSlider}></span>
+              <span className={styles.optionText}>{t('slotMachine.options.uppercase')}</span>
+            </label>
+            
+            <label className={styles.optionItem}>
+              <input
+                type="checkbox"
+                checked={passwordOptions.includeLowercase}
+                onChange={(e) => onOptionsChange && onOptionsChange({ ...passwordOptions, includeLowercase: e.target.checked })}
+                className={styles.optionCheckbox}
+                disabled={animationPhase === 'spinning' || animationPhase === 'stopping'}
+              />
+              <span className={styles.optionSlider}></span>
+              <span className={styles.optionText}>{t('slotMachine.options.lowercase')}</span>
+            </label>
+            
+            <label className={styles.optionItem}>
+              <input
+                type="checkbox"
+                checked={passwordOptions.includeNumbers}
+                onChange={(e) => onOptionsChange && onOptionsChange({ ...passwordOptions, includeNumbers: e.target.checked })}
+                className={styles.optionCheckbox}
+                disabled={animationPhase === 'spinning' || animationPhase === 'stopping'}
+              />
+              <span className={styles.optionSlider}></span>
+              <span className={styles.optionText}>{t('slotMachine.options.numbers')}</span>
+            </label>
+            
+            <label className={styles.optionItem}>
+              <input
+                type="checkbox"
+                checked={passwordOptions.includeSymbols}
+                onChange={(e) => onOptionsChange && onOptionsChange({ ...passwordOptions, includeSymbols: e.target.checked })}
+                className={styles.optionCheckbox}
+                disabled={animationPhase === 'spinning' || animationPhase === 'stopping'}
+              />
+              <span className={styles.optionSlider}></span>
+              <span className={styles.optionText}>{t('slotMachine.options.symbols')}</span>
+            </label>
           </div>
         </div>
       </div>

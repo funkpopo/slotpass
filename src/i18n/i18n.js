@@ -24,6 +24,13 @@ const resources = {
         generating: "Generating...",
         lengthLabel: "Password Length",
         generateButton: "Generate Password",
+        options: {
+          title: "Character Types",
+          uppercase: "A-Z",
+          lowercase: "a-z", 
+          numbers: "0-9",
+          symbols: "!@#"
+        },
         status: {
           ready: "Ready",
           generating: "Generating password...",
@@ -74,6 +81,13 @@ const resources = {
         generating: "生成中...",
         lengthLabel: "密码长度",
         generateButton: "生成密码",
+        options: {
+          title: "字符类型",
+          uppercase: "大写字母",
+          lowercase: "小写字母",
+          numbers: "数字",
+          symbols: "特殊符号"
+        },
         status: {
           ready: "准备就绪",
           generating: "正在生成密码...",
