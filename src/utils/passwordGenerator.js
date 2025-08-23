@@ -128,15 +128,45 @@ export function generateRandomCharacter(options = {}) {
 }
 
 /**
- * 生成随机字符序列（用于轮盘动画）
+ * 生成随机字符序列（用于轮盘动画）- 优化版本
  * @param {number} count - 字符数量
  * @param {Object} options - 字符选项
  * @returns {string[]} 字符数组
  */
 export function generateRandomCharacters(count, options = {}) {
-  const characters = []
-  for (let i = 0; i < count; i++) {
-    characters.push(generateRandomCharacter(options))
+  // 默认选项
+  const {
+    includeUppercase = true,
+    includeLowercase = true,
+    includeNumbers = true,
+    includeSymbols = true
+  } = options
+
+  // 构建字符集 - 优化：避免重复构建
+  let characterSet = ''
+  if (includeUppercase) characterSet += CHARACTER_SETS.UPPERCASE
+  if (includeLowercase) characterSet += CHARACTER_SETS.LOWERCASE
+  if (includeNumbers) characterSet += CHARACTER_SETS.NUMBERS
+  if (includeSymbols) characterSet += CHARACTER_SETS.SYMBOLS
+
+  // 如果没有选择任何字符集，使用默认全字符集
+  if (characterSet === '') {
+    characterSet = ALL_CHARACTERS
   }
+
+  // 批量生成随机数 - 性能优化
+  const array = new Uint32Array(count)
+  crypto.getRandomValues(array)
+  
+  const characters = new Array(count)
+  const charSetLength = characterSet.length
+  
+  for (let i = 0; i < count; i++) {
+    characters[i] = characterSet[array[i] % charSetLength]
+  }
+  
+  // 清除原始数组
+  array.fill(0)
+  
   return characters
 }

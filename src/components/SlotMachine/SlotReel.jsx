@@ -1,4 +1,5 @@
 import React, { memo } from 'react'
+import { CHARACTER_SETS } from '../../utils/passwordGenerator'
 import styles from './SlotReel.module.css'
 
 const SlotReel = memo(({ 
@@ -13,46 +14,36 @@ const SlotReel = memo(({
   reelIndex = 0,
   passwordLength = 8
 }) => {
-  // 创建显示字符列表，确保始终有内容
+  // 创建显示字符列表，确保始终有内容 - 性能优化版本
   const getDisplayContent = () => {
     if (isStopped) {
       // 已停止，显示最终字符，确保不为空
-      const finalChar = finalCharacter || currentCharacter || (displayCharacters.length > 0 ? displayCharacters[0] : 'A')
-      // 确保最终字符显示在视窗中央 - 移动端优化
+      const finalChar = finalCharacter || currentCharacter || 'A'
       return [finalChar]
     } else if (isStopping) {
       // 停止中，显示减速过程，包含目标字符和周围字符
-      const targetChar = finalCharacter || currentCharacter || (displayCharacters.length > 0 ? displayCharacters[0] : 'A')
-      const baseChars = displayCharacters.length > 0 ? displayCharacters.slice(0, 12) : 
-        ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
-      return [...baseChars, targetChar, targetChar, '·', '·'] // 逐渐聚焦到目标字符
+      const targetChar = finalCharacter || currentCharacter || 'A'
+      const baseChars = displayCharacters.length > 0 ? displayCharacters.slice(0, 8) : 
+        ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] // 减少基础字符数量
+      return [...baseChars, targetChar, targetChar]
     } else if (isSpinning) {
-      // 旋转中，显示大量连续的字符流，确保窗口中始终有多个可见字符
+      // 旋转中，使用已有的displayCharacters或生成更少的字符
       const spinChars = displayCharacters.length > 0 ? displayCharacters : characters
       if (spinChars.length === 0) {
-        // 生成包含各种字符类型的序列
+        // 优化：生成更少的字符，减少内存使用
+        const allChars = CHARACTER_SETS.UPPERCASE + CHARACTER_SETS.LOWERCASE + CHARACTER_SETS.NUMBERS + CHARACTER_SETS.SYMBOLS
         const chars = []
-        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-        const numbers = '0123456789'
-        const symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?'
-        const allChars = letters + numbers + symbols
-        
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 50; i++) { // 从80减少到50
           chars.push(allChars[i % allChars.length])
         }
         return chars
       }
-      // 扩展字符列表，创建足够长的无缝滚动内容
-      const extendedChars = []
-      for (let i = 0; i < 100; i++) {
-        extendedChars.push(spinChars[i % spinChars.length])
-      }
-      return extendedChars
+      // 使用现有字符，避免重复扩展
+      return spinChars
     } else {
-      // 闲置状态，显示当前字符和周围的装饰字符
-      const idleChar = currentCharacter || finalCharacter || 
-                      (displayCharacters.length > 0 ? displayCharacters[0] : 'A')
-      return ['·', idleChar, '·']
+      // 闲置状态，显示当前字符
+      const idleChar = currentCharacter || finalCharacter || 'A'
+      return [idleChar]
     }
   }
   

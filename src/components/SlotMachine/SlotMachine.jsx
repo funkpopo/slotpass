@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import SlotReel from './SlotReel'
-import { generateSecurePassword, generateRandomCharacters } from '../../utils/passwordGenerator'
+import { generateSecurePassword, generateRandomCharacters, generateRandomCharacter } from '../../utils/passwordGenerator'
 import styles from './SlotMachine.module.css'
 
 const SlotMachine = ({ 
@@ -26,19 +26,23 @@ const SlotMachine = ({
   const [isPasswordVisible, setIsPasswordVisible] = useState(false) // 密码可见性
   const [copyStatus, setCopyStatus] = useState('idle') // 'idle', 'copied', 'error'
 
-  // 初始化轮盘状态
+  // 初始化轮盘状态 - 性能优化
   useEffect(() => {
-    const initialReels = Array.from({ length: passwordLength }, (_, index) => ({
-      id: `reel-${index}`,
-      characters: generateRandomCharacters(40, passwordOptions), // 更多初始字符用于流畅动画
-      finalCharacter: '',
-      animationDelay: Math.random() * 300, // 0-300ms随机延迟
-      isSpinning: false,
-      isStopping: false,
-      isStopped: false,
-      currentCharacter: generateRandomCharacters(1, passwordOptions)[0], // 当前显示的字符，确保不为空
-      displayCharacters: generateRandomCharacters(20, passwordOptions) // 始终保持显示的字符列表
-    }))
+    const initialReels = Array.from({ length: passwordLength }, (_, index) => {
+      // 优化：减少初始字符数量，提高加载速度
+      const initialChar = generateRandomCharacter(passwordOptions)
+      return {
+        id: `reel-${index}`,
+        characters: [], // 初始为空，在旋转时再生成
+        finalCharacter: '',
+        animationDelay: Math.random() * 200, // 减少随机延迟范围
+        isSpinning: false,
+        isStopping: false,
+        isStopped: false,
+        currentCharacter: initialChar,
+        displayCharacters: [initialChar] // 只显示一个初始字符
+      }
+    })
     setReelStates(initialReels)
   }, [passwordLength, passwordOptions])
 
@@ -71,7 +75,7 @@ const SlotMachine = ({
           
           // 不要重置状态为idle，保持stopped状态以显示密码
           // 只有在开始新的生成时才重置
-        }, 200) // 缩短最终延迟到200ms
+        }, 100) // 进一步缩短最终延迟到100ms
         return
       }
       
@@ -146,8 +150,8 @@ const SlotMachine = ({
         )
         
         currentIndex++
-        setTimeout(stopNextReel, 150) // 缩短间隔到150ms，让停止效果更连贯
-      }, 400) // 每个轮盘减速400ms，与CSS动画协调
+        setTimeout(stopNextReel, 80) // 进一步缩短间隔到80ms，更快的停止效果
+      }, 250) // 减速时间缩短到250ms
     }
     
     stopNextReel()
@@ -167,18 +171,18 @@ const SlotMachine = ({
       const securePasswordObj = generateSecurePassword(passwordLength, passwordOptions)
       const finalPassword = securePasswordObj.getValue()
       
-      // 更新轮盘状态开始旋转
+      // 更新轮盘状态开始旋转 - 优化版本
       setReelStates(prevReels => 
         prevReels.map((reel, index) => ({
           ...reel,
-          characters: generateRandomCharacters(80, passwordOptions),
-          displayCharacters: generateRandomCharacters(40, passwordOptions),
+          characters: generateRandomCharacters(60, passwordOptions), // 减少到60个字符
+          displayCharacters: generateRandomCharacters(30, passwordOptions), // 减少到30个
           finalCharacter: finalPassword[index],
           isSpinning: true,
           isStopping: false,
           isStopped: false,
-          animationDelay: index * 80 + Math.random() * 120,
-          currentCharacter: generateRandomCharacters(1)[0]
+          animationDelay: index * 40 + Math.random() * 60, // 减少延迟，让轮盘更快启动
+          currentCharacter: generateRandomCharacter(passwordOptions) // 使用单个字符生成
         }))
       )
 
@@ -186,7 +190,7 @@ const SlotMachine = ({
       setTimeout(() => {
         setAnimationPhase('stopping')
         startStoppingSequence(finalPassword, securePasswordObj)
-      }, 500)
+      }, 300) // 缩短旋转时间从500ms到300ms
     }
   }, [isSpinning, animationPhase, passwordLength, startStoppingSequence])
 

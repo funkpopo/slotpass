@@ -93,18 +93,18 @@
 
 /* 旋转动画 - 真实的老虎机仿真效果 */
 .spinning {
-  animation: reelSpin 1.2s linear infinite, reelVibration 0.15s ease-in-out infinite;
+  animation: reelSpin 0.8s linear infinite, reelVibration 0.12s ease-in-out infinite; /* 缩短旋转时间到0.8s */
   animation-delay: var(--animation-delay);
-  filter: blur(0.8px); /* 适中的模糊效果 */
+  filter: blur(0.5px); /* 减少模糊效果 */
   transform-origin: center top;
   backface-visibility: hidden;
   will-change: transform, filter;
 }
 
 .spinning .reelCharacter {
-  animation: charSpin 0.15s linear infinite, charFlicker 0.25s ease-in-out infinite;
-  filter: blur(0.3px) brightness(1.05);
-  opacity: 0.9;
+  animation: charSpin 0.12s linear infinite, charFlicker 0.18s ease-in-out infinite; /* 加快字符动画 */
+  filter: blur(0.2px) brightness(1.03); /* 减少模糊 */
+  opacity: 0.95;
   transform-origin: center center;
 }
 
@@ -118,22 +118,22 @@
 .spinning .reelCharacter:nth-child(8) { animation-delay: 0.14s; }
 
 .stopping {
-  animation: reelSlowDown 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-  filter: blur(0.2px); /* 减速时减少模糊 */
+  animation: reelSlowDown 0.25s cubic-bezier(0.23, 1, 0.32, 1) forwards; /* 缩短停止动画时间 */
+  filter: blur(0.1px); /* 减速时减少模糊 */
   animation-iteration-count: 1;
   transform-origin: center top;
 }
 
 .stopping .reelCharacter {
   animation: 
-    charSlowDown 0.1s ease-out infinite,
-    charStabilize 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s forwards;
-  filter: blur(0.1px) brightness(1.02);
-  opacity: 0.95;
+    charSlowDown 0.08s ease-out infinite, /* 加快减速动画 */
+    charStabilize 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.05s forwards; /* 缩短稳定时间 */
+  filter: blur(0.05px) brightness(1.01);
+  opacity: 0.98;
 }
 
 .stopped {
-  animation: smoothStop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  animation: smoothStop 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* 缩短最终停止动画 */
   animation-fill-mode: both;
   filter: none; /* 移除模糊，确保清晰显示 */
   position: relative;
@@ -144,7 +144,7 @@
 .stopped .reelCharacter {
   filter: none; /* 确保已停止的字符清晰可见 */
   opacity: 1;
-  animation: charFinalBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  animation: charFinalBounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; /* 缩短弹跳动画 */
 }
 
 /* 轮盘边框装饰 */
@@ -204,7 +204,7 @@
     transform: translateY(0);
   }
   100% {
-    transform: translateY(-960px); /* 调整滚动距离，确保在1.2s内能看到字符流动 */
+    transform: translateY(-800px); /* 减少滚动距离，提升性能 */
   }
 }
 
@@ -219,24 +219,16 @@
 
 @keyframes reelSlowDown {
   0% {
-    transform: translateY(-960px);
+    transform: translateY(-800px); /* 对应新的滚动距离 */
     animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
-  20% {
-    transform: translateY(-768px);
+  30% {
+    transform: translateY(-600px);
     animation-timing-function: cubic-bezier(0.55, 0.085, 0.68, 0.53);
   }
-  40% {
-    transform: translateY(-576px);
-    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
-  }
   60% {
-    transform: translateY(-384px);
+    transform: translateY(-320px);
     animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-  }
-  80% {
-    transform: translateY(-192px);
-    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
   }
   100% {
     transform: translateY(-160px); /* 停在合适位置显示最终字符 */
