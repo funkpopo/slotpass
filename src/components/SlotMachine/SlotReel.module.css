@@ -1,71 +1,81 @@
 .slotReel {
   position: relative;
   width: calc(min(95px, max(50px, (100vw - 8rem) / var(--password-length, 8) - 0.5rem)));
-  height: 120px;
-  background: var(--bg-tertiary);
-  border-radius: var(--border-radius-lg);
-  border: 2px solid var(--border-color);
+  height: 130px;
+  background: #0a0a0a;
+  border-radius: 12px;
+  border: 3px solid #2a2a2a;
   box-shadow: 
-    inset 0 2px 8px rgba(0, 0, 0, 0.3),
-    0 4px 12px rgba(0, 0, 0, 0.4);
+    inset 0 4px 12px rgba(0, 0, 0, 0.8),
+    0 6px 20px rgba(0, 0, 0, 0.6),
+    inset 0 -2px 4px rgba(255, 255, 255, 0.02);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 1;
-  transition: transform 0.1s ease-out;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
-/* 增强轮盘停止时的震动效果 */
+/* 增强轮盘停止时的物理震动效果 */
 .slotReel:has(.stopped) {
-  animation: reelShake 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  animation: reelMechanicalStop 0.5s cubic-bezier(0.36, 0.66, 0.04, 1) forwards;
 }
 
 .reelWindow {
   width: calc(min(75px, max(35px, (100vw - 10rem) / var(--password-length, 8) - 0.5rem)));
-  height: 80px;
-  background: var(--bg-primary);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--border-radius-md);
+  height: 90px;
+  background: #050505;
+  border: 2px solid #1a1a1a;
+  border-radius: 8px;
   overflow: hidden;
   position: relative;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+  box-shadow: 
+    inset 0 4px 10px rgba(0, 0, 0, 0.9),
+    inset 0 -2px 2px rgba(255, 255, 255, 0.01);
   /* 性能优化 */
   contain: layout style paint;
   transform: translateZ(0);
+  will-change: transform;
 }
 
 .reelStrip {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  height: auto; /* 让高度自适应内容 */
-  min-height: 8000px; /* 增加最小高度确保足够的滚动空间 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  min-height: 2000px;
   transform-origin: center top;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   will-change: transform;
+  transform: translateY(0);
 }
 
 .reelCharacter {
   width: 100%;
-  height: 80px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-xl);
+  font-size: 28px;
   font-weight: bold;
-  color: var(--text-primary);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
   font-family: 'Courier New', monospace;
-  position: relative; /* 改为relative以支持流动布局 */
+  position: relative;
   transform-origin: center;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   will-change: transform, opacity;
   transition: all 0.05s ease-out;
-  flex-shrink: 0; /* 防止收缩 */
+  flex-shrink: 0;
+  line-height: 90px;
 }
 
 .normalCharacter {
@@ -73,15 +83,18 @@
 }
 
 .finalCharacter {
-  color: var(--accent-primary);
+  color: #4caf50 !important;
   text-shadow: 
-    0 0 8px rgba(76, 175, 80, 0.6),
-    0 0 16px rgba(76, 175, 80, 0.3),
-    0 1px 3px rgba(0, 0, 0, 0.8);
-  animation: finalGlow 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    0 0 15px rgba(76, 175, 80, 0.8),
+    0 0 30px rgba(76, 175, 80, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.9);
+  animation: finalGlow 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   z-index: 10;
-  filter: none !important; /* 强制移除任何模糊效果 */
-  opacity: 1 !important; /* 强制完全不透明 */
+  filter: none !important;
+  opacity: 1 !important;
+  font-size: 34px !important;
+  font-weight: bold !important;
+  transform: scale(1.1);
 }
 
 .stoppingCharacter {
@@ -91,20 +104,18 @@
   z-index: 5;
 }
 
-/* 旋转动画 - 真实的老虎机仿真效果 */
+/* 旋转动画 - 更真实的机械轮盘效果 */
 .spinning {
-  animation: reelSpin 0.8s linear infinite, reelVibration 0.12s ease-in-out infinite; /* 缩短旋转时间到0.8s */
+  animation: mechanicalSpin 0.8s linear infinite;
   animation-delay: var(--animation-delay);
-  filter: blur(0.5px); /* 减少模糊效果 */
   transform-origin: center top;
   backface-visibility: hidden;
-  will-change: transform, filter;
+  will-change: transform;
 }
 
 .spinning .reelCharacter {
-  animation: charSpin 0.12s linear infinite, charFlicker 0.18s ease-in-out infinite; /* 加快字符动画 */
-  filter: blur(0.2px) brightness(1.03); /* 减少模糊 */
-  opacity: 0.95;
+  filter: blur(2px);
+  opacity: 0.7;
   transform-origin: center center;
 }
 
@@ -118,8 +129,8 @@
 .spinning .reelCharacter:nth-child(8) { animation-delay: 0.14s; }
 
 .stopping {
-  animation: reelSlowDown 0.25s cubic-bezier(0.23, 1, 0.32, 1) forwards; /* 缩短停止动画时间 */
-  filter: blur(0.1px); /* 减速时减少模糊 */
+  animation: mechanicalSlowDown 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  filter: blur(0.5px);
   animation-iteration-count: 1;
   transform-origin: center top;
 }
@@ -133,18 +144,25 @@
 }
 
 .stopped {
-  animation: smoothStop 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* 缩短最终停止动画 */
-  animation-fill-mode: both;
-  filter: none; /* 移除模糊，确保清晰显示 */
-  position: relative;
-  /* 移动端优化：确保最终字符居中显示 */
-  transform: var(--final-transform, translateY(-160px));
+  animation: none;
+  filter: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(0);
 }
 
 .stopped .reelCharacter {
-  filter: none; /* 确保已停止的字符清晰可见 */
+  filter: none;
   opacity: 1;
-  animation: charFinalBounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; /* 缩短弹跳动画 */
+  animation: charFinalBounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  color: #4caf50;
+  font-size: 32px;
+  text-shadow: 
+    0 0 10px rgba(76, 175, 80, 0.6),
+    0 0 20px rgba(76, 175, 80, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 /* 轮盘边框装饰 */
@@ -154,19 +172,23 @@
   left: -2px;
   right: -2px;
   bottom: -2px;
-  border-radius: var(--border-radius-lg);
-  background: var(--accent-secondary);
+  border-radius: 12px;
+  background: transparent;
+  border: 2px solid rgba(255, 107, 53, 0.3);
   opacity: 0;
-  transition: opacity var(--transition-normal);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
 
 .slotReel:hover .reelBorder {
-  opacity: 0.6;
+  opacity: 0.8;
+  border-color: rgba(255, 107, 53, 0.5);
+  box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
 }
 
 .spinning .reelBorder {
   opacity: 1;
+  border-color: rgba(255, 107, 53, 0.8);
   animation: 
     borderSpin 0.8s linear infinite,
     borderVibration 0.1s ease-in-out infinite,
@@ -175,6 +197,7 @@
 
 .stopping .reelBorder {
   opacity: 0.9;
+  border-color: rgba(255, 235, 59, 0.7);
   animation: 
     borderPulse 0.6s ease-in-out,
     borderSlowGlow 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -198,75 +221,81 @@
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
 }
 
-/* 动画关键帧 - 真实老虎机滚动仿真 */
-@keyframes reelSpin {
+/* 动画关键帧 - 机械轮盘滚动效果 */
+@keyframes mechanicalSpin {
   0% {
     transform: translateY(0);
   }
   100% {
-    transform: translateY(-800px); /* 减少滚动距离，提升性能 */
+    transform: translateY(-900px);
   }
 }
 
-/* 新增：震动效果 */
-@keyframes reelVibration {
-  0% { transform: translateX(0) translateZ(0); }
-  25% { transform: translateX(0.5px) translateZ(0); }
-  50% { transform: translateX(0) translateZ(0); }
-  75% { transform: translateX(-0.5px) translateZ(0); }
-  100% { transform: translateX(0) translateZ(0); }
+/* 新增：轮盘摇摆效果 */
+@keyframes reelWobble {
+  0% { transform: translateX(0) rotateZ(0deg); }
+  25% { transform: translateX(1px) rotateZ(0.5deg); }
+  50% { transform: translateX(0) rotateZ(0deg); }
+  75% { transform: translateX(-1px) rotateZ(-0.5deg); }
+  100% { transform: translateX(0) rotateZ(0deg); }
 }
 
-@keyframes reelSlowDown {
+@keyframes mechanicalSlowDown {
   0% {
-    transform: translateY(-800px); /* 对应新的滚动距离 */
-    animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform: translateY(-900px);
   }
   30% {
-    transform: translateY(-600px);
-    animation-timing-function: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    transform: translateY(-500px);
   }
   60% {
-    transform: translateY(-320px);
-    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translateY(-200px);
+  }
+  80% {
+    transform: translateY(-50px);
+  }
+  90% {
+    transform: translateY(-10px);
+  }
+  95% {
+    transform: translateY(-5px);
   }
   100% {
-    transform: translateY(-160px); /* 停在合适位置显示最终字符 */
+    transform: translateY(0);
   }
 }
 
-@keyframes charSpin {
+@keyframes charMechanicalSpin {
   0% { 
-    opacity: 0.9;
-    transform: scale(1) rotateX(0deg) rotateY(0deg);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    opacity: 0.8;
+    transform: perspective(100px) rotateX(0deg) scale(1);
+    filter: blur(0);
   }
   25% { 
-    opacity: 0.7;
-    transform: scale(0.94) rotateX(90deg) rotateY(5deg);
-    text-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
+    opacity: 0.6;
+    transform: perspective(100px) rotateX(90deg) scale(0.9);
+    filter: blur(2px);
   }
   50% { 
-    opacity: 0.8;
-    transform: scale(1.03) rotateX(180deg) rotateY(0deg);
-    text-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+    opacity: 0.7;
+    transform: perspective(100px) rotateX(180deg) scale(0.95);
+    filter: blur(1.5px);
   }
   75% { 
-    opacity: 0.7;
-    transform: scale(0.95) rotateX(270deg) rotateY(-5deg);
-    text-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
+    opacity: 0.6;
+    transform: perspective(100px) rotateX(270deg) scale(0.9);
+    filter: blur(2px);
   }
   100% { 
-    opacity: 0.9;
-    transform: scale(1) rotateX(360deg) rotateY(0deg);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    opacity: 0.8;
+    transform: perspective(100px) rotateX(360deg) scale(1);
+    filter: blur(0);
   }
 }
 
-/* 新增：字符闪烁效果 */
-@keyframes charFlicker {
-  0%, 100% { opacity: 0.9; }
-  50% { opacity: 0.7; }
+/* 新增：字符震动效果 */
+@keyframes charVibrate {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1px); }
 }
 
 @keyframes charSlowDown {
@@ -308,27 +337,42 @@
   }
 }
 
-@keyframes smoothStop {
+@keyframes mechanicalLock {
   0% { 
-    transform: translateY(-160px) scale(1.05) rotateX(2deg) rotateZ(-0.5deg);
+    transform: translateY(-160px) scale(1.1) rotateX(5deg);
+    opacity: 0.9;
+  }
+  15% { 
+    transform: translateY(-150px) scale(0.95) rotateX(-3deg);
     opacity: 0.95;
   }
-  25% { 
-    transform: translateY(-140px) scale(0.98) rotateX(-1deg) rotateZ(1deg);
-    opacity: 0.98;
-  }
-  50% {
-    transform: translateY(-152px) scale(1.02) rotateX(1deg) rotateZ(-0.3deg);
+  30% {
+    transform: translateY(-165px) scale(1.05) rotateX(2deg);
     opacity: 1;
   }
-  75% {
-    transform: translateY(-148px) scale(0.99) rotateX(-0.5deg) rotateZ(0.2deg);
+  50% {
+    transform: translateY(-158px) scale(0.98) rotateX(-1deg);
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(-161px) scale(1.02) rotateX(0.5deg);
+    opacity: 1;
+  }
+  85% {
+    transform: translateY(-159px) scale(0.99) rotateX(-0.2deg);
     opacity: 1;
   }
   100% { 
-    transform: var(--final-transform, translateY(-160px)) scale(1) rotateX(0deg) rotateZ(0deg);
+    transform: translateY(-160px) scale(1) rotateX(0deg);
     opacity: 1;
   }
+}
+
+/* 新增：最终震动效果 */
+@keyframes finalVibration {
+  0%, 100% { transform: translateY(-160px); }
+  25% { transform: translateY(-159px); }
+  75% { transform: translateY(-161px); }
 }
 
 /* 新增：最终稳定效果 */
@@ -346,41 +390,35 @@
   100% { transform: rotate(0deg) scale(1); }
 }
 
+/* 移除渐变，使用纯色边框发光 */
 @keyframes borderGlow {
   0%, 100% {
-    background: var(--accent-secondary);
+    background: transparent;
     opacity: 1;
+    box-shadow: 0 0 15px rgba(255, 107, 53, 0.6);
   }
   50% {
-    background: linear-gradient(45deg, 
-      rgba(255, 107, 53, 0.8), 
-      rgba(255, 193, 7, 0.3) 30%, 
-      rgba(255, 193, 7, 0.3) 70%, 
-      rgba(255, 107, 53, 0.8));
-    opacity: 1.2;
+    background: transparent;
+    opacity: 1;
+    box-shadow: 0 0 25px rgba(255, 107, 53, 0.8);
   }
 }
 
 @keyframes borderSlowGlow {
   0% {
-    background: var(--accent-secondary);
+    background: transparent;
     opacity: 0.9;
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
   }
   50% {
-    background: linear-gradient(45deg, 
-      rgba(255, 235, 59, 0.9), 
-      rgba(255, 235, 59, 0.4) 30%, 
-      rgba(255, 235, 59, 0.4) 70%, 
-      rgba(255, 235, 59, 0.9));
+    background: transparent;
     opacity: 1;
+    box-shadow: 0 0 20px rgba(255, 235, 59, 0.7);
   }
   100% {
-    background: linear-gradient(45deg, 
-      rgba(76, 175, 80, 0.6), 
-      transparent 30%, 
-      transparent 70%, 
-      rgba(76, 175, 80, 0.6));
+    background: transparent;
     opacity: 0.7;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
   }
 }
 
@@ -388,34 +426,26 @@
   0% { 
     opacity: 0.9;
     transform: scale(1) rotate(0deg);
-    background: var(--accent-secondary);
+    background: transparent;
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
   }
   25% {
     opacity: 1.1;
     transform: scale(1.03) rotate(2deg);
-    background: linear-gradient(45deg, 
-      rgba(255, 235, 59, 1), 
-      rgba(255, 235, 59, 0.5) 30%, 
-      rgba(255, 235, 59, 0.5) 70%, 
-      rgba(255, 235, 59, 1));
+    background: transparent;
+    box-shadow: 0 0 20px rgba(255, 235, 59, 0.8);
   }
   50% { 
     opacity: 1;
     transform: scale(1.02) rotate(-1deg);
-    background: linear-gradient(45deg, 
-      rgba(255, 193, 7, 0.8), 
-      rgba(255, 193, 7, 0.3) 30%, 
-      rgba(255, 193, 7, 0.3) 70%, 
-      rgba(255, 193, 7, 0.8));
+    background: transparent;
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.6);
   }
   100% { 
     opacity: 0.7;
     transform: scale(1) rotate(0deg);
-    background: linear-gradient(45deg, 
-      rgba(76, 175, 80, 0.6), 
-      transparent 30%, 
-      transparent 70%, 
-      rgba(76, 175, 80, 0.6));
+    background: transparent;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
   }
 }
 
@@ -516,40 +546,46 @@
   }
 }
 
-/* 新增：轮盘震动效果 */
-@keyframes reelShake {
+/* 新增：机械停止效果 */
+@keyframes reelMechanicalStop {
   0% {
-    transform: translateX(0) translateY(0) rotate(0deg);
+    transform: translateX(0) translateY(0) rotate(0deg) scale(1);
   }
-  10% {
-    transform: translateX(-2px) translateY(-1px) rotate(-0.5deg);
+  8% {
+    transform: translateX(-3px) translateY(-2px) rotate(-1deg) scale(1.02);
   }
-  20% {
-    transform: translateX(2px) translateY(1px) rotate(0.5deg);
+  16% {
+    transform: translateX(3px) translateY(2px) rotate(1deg) scale(0.98);
   }
-  30% {
-    transform: translateX(-1px) translateY(0px) rotate(-0.3deg);
+  24% {
+    transform: translateX(-2px) translateY(-1px) rotate(-0.5deg) scale(1.01);
+  }
+  32% {
+    transform: translateX(2px) translateY(1px) rotate(0.5deg) scale(0.99);
   }
   40% {
-    transform: translateX(1px) translateY(-0.5px) rotate(0.3deg);
+    transform: translateX(-1px) translateY(-0.5px) rotate(-0.3deg) scale(1.005);
   }
-  50% {
-    transform: translateX(0px) translateY(0.5px) rotate(0deg);
+  48% {
+    transform: translateX(1px) translateY(0.5px) rotate(0.3deg) scale(0.995);
   }
-  60% {
-    transform: translateX(-0.5px) translateY(0px) rotate(-0.1deg);
+  56% {
+    transform: translateX(-0.5px) translateY(0px) rotate(-0.1deg) scale(1.002);
   }
-  70% {
-    transform: translateX(0.5px) translateY(-0.2px) rotate(0.1deg);
+  64% {
+    transform: translateX(0.5px) translateY(0px) rotate(0.1deg) scale(0.998);
+  }
+  72% {
+    transform: translateX(-0.3px) translateY(-0.2px) rotate(0deg) scale(1.001);
   }
   80% {
-    transform: translateX(0px) translateY(0.1px) rotate(0deg);
+    transform: translateX(0.3px) translateY(0.2px) rotate(0deg) scale(0.999);
   }
-  90% {
-    transform: translateX(-0.1px) translateY(0px) rotate(0deg);
+  88% {
+    transform: translateX(-0.1px) translateY(0px) rotate(0deg) scale(1);
   }
   100% {
-    transform: translateX(0) translateY(0) rotate(0deg);
+    transform: translateX(0) translateY(0) rotate(0deg) scale(1);
   }
 }
 

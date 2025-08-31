@@ -14,36 +14,31 @@ const SlotReel = memo(({
   reelIndex = 0,
   passwordLength = 8
 }) => {
-  // 创建显示字符列表，确保始终有内容 - 性能优化版本
+  // 创建显示字符列表
   const getDisplayContent = () => {
-    if (isStopped) {
-      // 已停止，显示最终字符，确保不为空
-      const finalChar = finalCharacter || currentCharacter || 'A'
-      return [finalChar]
-    } else if (isStopping) {
-      // 停止中，显示减速过程，包含目标字符和周围字符
-      const targetChar = finalCharacter || currentCharacter || 'A'
-      const baseChars = displayCharacters.length > 0 ? displayCharacters.slice(0, 8) : 
-        ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] // 减少基础字符数量
-      return [...baseChars, targetChar, targetChar]
+    if (isStopped && finalCharacter) {
+      // 已停止，只显示最终字符
+      return [finalCharacter]
+    } else if (isStopping && finalCharacter) {
+      // 停止中，显示减速过程
+      const baseChars = displayCharacters.length > 0 ? displayCharacters : 
+        ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+      return [...baseChars, finalCharacter]
     } else if (isSpinning) {
-      // 旋转中，使用已有的displayCharacters或生成更少的字符
-      const spinChars = displayCharacters.length > 0 ? displayCharacters : characters
-      if (spinChars.length === 0) {
-        // 优化：生成更少的字符，减少内存使用
-        const allChars = CHARACTER_SETS.UPPERCASE + CHARACTER_SETS.LOWERCASE + CHARACTER_SETS.NUMBERS + CHARACTER_SETS.SYMBOLS
-        const chars = []
-        for (let i = 0; i < 50; i++) { // 从80减少到50
-          chars.push(allChars[i % allChars.length])
-        }
-        return chars
+      // 旋转中，显示随机字符
+      if (displayCharacters.length > 0) {
+        return displayCharacters
       }
-      // 使用现有字符，避免重复扩展
-      return spinChars
+      // 生成默认字符
+      const allChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
+      const chars = []
+      for (let i = 0; i < 20; i++) {
+        chars.push(allChars[Math.floor(Math.random() * allChars.length)])
+      }
+      return chars
     } else {
-      // 闲置状态，显示当前字符
-      const idleChar = currentCharacter || finalCharacter || 'A'
-      return [idleChar]
+      // 闲置状态
+      return [currentCharacter || finalCharacter || 'A']
     }
   }
   
@@ -67,16 +62,15 @@ const SlotReel = memo(({
           }`}
           style={{
             '--animation-delay': `${animationDelay}ms`,
-            '--reel-index': reelIndex,
-            '--final-transform': isStopped ? 'translateY(0)' : 'unset'
+            '--reel-index': reelIndex
           }}
         >
           {displayContent.map((char, index) => (
             <div 
-              key={`${char}-${index}-${isSpinning ? 'spinning' : isStopping ? 'stopping' : isStopped ? 'stopped' : 'idle'}`}
+              key={`${char}-${index}-${Date.now()}`}
               className={`${styles.reelCharacter} ${
-                isStopped ? styles.finalCharacter :
-                isStopping && index >= displayContent.length - 2 ? styles.stoppingCharacter :
+                isStopped && index === 0 ? styles.finalCharacter :
+                isStopping && char === finalCharacter ? styles.stoppingCharacter :
                 styles.normalCharacter
               }`}
             >
